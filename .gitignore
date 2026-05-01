@@ -1,0 +1,55 @@
+# --- big binary artifacts (use cloud storage / git-lfs instead) ---
+runs/
+data/nih/
+data/rag/raw/
+*.pt
+*.npz
+*.faiss
+*.parquet
+
+# --- HF model caches ---
+hf_cache/
+.cache/
+*.safetensors
+
+# --- secrets ---
+.env
+*.token
+*_secret*
+amd_radagent
+amd_radagent.pub
+*.pem
+
+# --- python ---
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- venvs ---
+.venv/
+venv/
+env/
+
+# --- editor / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- logs ---
+*.log
+calibrate_bands.log
+predict_one.log
+scrape.log
+build_index.log
+corpus.log
+bench_*.log
+
+# --- temp ---
+*.tmp
+tmp/
+temp/

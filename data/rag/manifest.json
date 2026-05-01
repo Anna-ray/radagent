@@ -1,0 +1,9 @@
+{
+  "embed_model": "BAAI/bge-m3",
+  "embed_dim": 1024,
+  "n_chunks": 1078,
+  "n_articles": 49,
+  "max_tokens": 480,
+  "overlap_tokens": 50,
+  "license_summary": "Radiopaedia content under CC-BY-NC-SA. Attribution required via source_url."
+}

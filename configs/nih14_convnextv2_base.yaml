@@ -1,0 +1,82 @@
+experiment:
+  name: nih14_convnextv2_base_384
+  seed: 42
+  output_dir: ./runs
+data:
+  images_dir: C:/Users/pc/Desktop/radagent/data/nih
+  labels_csv: C:/Users/pc/Desktop/radagent/data/nih/Data_Entry_2017.csv
+  train_split_txt: C:/Users/pc/Desktop/radagent/data/nih/train_val_list.txt
+  test_split_txt: C:/Users/pc/Desktop/radagent/data/nih/test_list.txt
+  val_fraction: 0.1
+  image_size: 384
+  num_workers: 2
+  pin_memory: true
+  persistent_workers: true
+  classes:
+  - Atelectasis
+  - Cardiomegaly
+  - Effusion
+  - Infiltration
+  - Mass
+  - Nodule
+  - Pneumonia
+  - Pneumothorax
+  - Consolidation
+  - Edema
+  - Emphysema
+  - Fibrosis
+  - Pleural_Thickening
+  - Hernia
+model:
+  name: convnextv2_base.fcmae_ft_in22k_in1k_384
+  pretrained: true
+  drop_path_rate: 0.2
+  grad_checkpointing: true
+loss:
+  type: asl
+  asl_gamma_neg: 4.0
+  asl_gamma_pos: 1.0
+  asl_clip: 0.05
+  label_smoothing: 0.0
+optim:
+  optimizer: adamw
+  lr_backbone: 5.0e-05
+  lr_head: 0.0005
+  weight_decay: 0.05
+  betas:
+  - 0.9
+  - 0.999
+scheduler:
+  type: cosine_warmup
+  warmup_epochs: 2
+  min_lr_ratio: 0.01
+train:
+  epochs: 25
+  batch_size: 16
+  grad_accum_steps: 2
+  amp_dtype: bf16
+  gradient_clip_norm: 1.0
+  ema_decay: 0.9999
+  use_weighted_sampler: true
+  early_stopping_patience: 6
+augment:
+  random_resized_crop_scale:
+  - 0.85
+  - 1.0
+  random_affine_degrees: 7
+  random_affine_translate: 0.05
+  elastic_alpha: 30
+  elastic_sigma: 5
+  clahe_clip_limit_jitter:
+  - 1.5
+  - 3.5
+  hflip_prob: 0.5
+eval:
+  tta: true
+  threshold_search: true
+  calibrate_temperature: true
+logging:
+  log_every_n_steps: 50
+  save_top_k: 3
+  monitor_metric: val_mean_auc
+  monitor_mode: max

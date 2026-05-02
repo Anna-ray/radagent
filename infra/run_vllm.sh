@@ -51,7 +51,8 @@ source /workspace/venv/bin/activate
 
 # --gpu-memory-utilization keeps headroom for our specialist + RAG embedder
 # --enforce-eager skips graph compilation (faster startup, ~5% slower per step)
-# --limit-mm-per-prompt image=1 since we send one CXR per request
+# --limit-mm-per-prompt '{"image": 1}' since we send one CXR per request
+echo "$HF_TOKEN" | huggingface-cli login --token --add-to-git-credential 2>&1 | tail -3
 exec vllm serve "$MODEL_ID" \
     --host 0.0.0.0 \
     --port "$PORT" \
@@ -59,5 +60,5 @@ exec vllm serve "$MODEL_ID" \
     --max-model-len "$MAX_MODEL_LEN" \
     --gpu-memory-utilization "$GPU_MEM_FRAC" \
     --enforce-eager \
-    --limit-mm-per-prompt image=1 \
+    --limit-mm-per-prompt '{"image": 1}' \
     --trust-remote-code

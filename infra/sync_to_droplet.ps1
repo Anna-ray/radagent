@@ -22,7 +22,7 @@ param(
     [Parameter(Mandatory=$true)] [string] $DropletIp,
     [string] $SshKey = "$HOME\.ssh\amd_radagent",
     [string] $User = "root",
-    [string] $RemoteRoot = "/workspace/radagent",
+    [string] $RemoteRoot = "/shared-docker/radagent",
     [int] $NImages = 10
 )
 
@@ -124,4 +124,5 @@ Write-Host "  $RemoteRoot/runs/nih14_convnextv2_base_384/best.pt"
 Write-Host "  $RemoteRoot/data/rag/index.faiss"
 Write-Host "  $RemoteRoot/data/samples/<10 images>"
 Write-Host "  $RemoteRoot/{radagent,scripts,infra,configs}/..."
+
 

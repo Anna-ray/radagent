@@ -1,0 +1,289 @@
+{
+  "timings": {
+    "image": "00011067_002.png",
+    "pre_ms": 11.624247999861836,
+    "spec_ms": 21.78887800027951,
+    "findings_ms": 0.10327699965273496,
+    "n_above": 1,
+    "rag_ms": 9.069177000128548,
+    "vlm_ms": 4345.163211999989,
+    "vlm_prompt_tokens": 2038,
+    "vlm_completion_tokens": 310,
+    "total_ms": 4387.748791999911
+  },
+  "findings": {
+    "schema_version": "1.0",
+    "image_meta": {
+      "path": "data/samples/00011067_002.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "modality": "CXR"
+    },
+    "model_meta": {
+      "checkpoint": "runs/nih14_convnextv2_base_384/best.pt",
+      "tta": "hflip",
+      "calibration_temperature": 0.19791588187217712
+    },
+    "findings": [
+      {
+        "name": "Atelectasis",
+        "class_index": 0,
+        "raw_logit": 0.69140625,
+        "raw_probability": 0.6662796810207858,
+        "calibrated_probability": 0.9705003941090558,
+        "threshold": 0.4263215959072113,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.4163215959072113,
+          0.9774618744850159
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Atelectasis - Diagnosis: Clinically significant atelectasis is generally visible on chest X-ray; findings can include lung opacification and/or loss of lung volume. Post-surgical atelectasis will be bibasal in pattern. Chest CT or bronchoscopy may be necessary if the cause of atelectasis is not clinically apparent. Direct signs of atelectasis include displacement of interlobar fissures and mobile structures within the thorax, overinflation of the unaffected ipsilateral lobe or contralateral lung, and opacification of the collapsed lobe. Primarily, in a lung ultrasound the static air bronchogram is the what differentiates atelectasis from pneumonia. In addition to clinically significant findings on chest X-rays, patients may present with indirect signs and symptoms such as elevation of the diaphragm, shifting of the trachea, heart and mediastinum; displacement of the hilus and shifting granulomas.",
+            "source_url": "https://en.wikipedia.org/wiki/Atelectasis",
+            "title": "Atelectasis",
+            "section": "Diagnosis",
+            "chunk_id": "atelectasis__wiki::Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7317361831665039,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Atelectasis - Evaluation: Atelectasis is usually a clinical diagnosis in a patient with known risk factors. If imaging is warranted, chest radiography, chest computed tomography, or thoracic ultrasonography are useful when diagnosing atelectasis. A chest x-ray will reveal platelike, horizontal lines in the area of atelectatic lung tissue and may result in the displacement of interlobar fissures, pulmonary opacification, or tracheal shift toward the affected side. [8] . Atelectasis is not typically evident on conventional chest radiographs until it is significant.\nComputed tomography of the chest performed in patients with atelectasis often reveals dependent lung densities and loss of volume in the affected side of the chest.\nAtelectasis may also be directly visible with fiberoptic bronchoscopy. Fiberoptic bronchoscopy can be both diagnostic and therapeutic, often revealing the cause of any obstruction contributing to the atelectasis, such as a tumor, mucous plug, or foreign body.\nAn arterial blood gas may reveal arterial hypoxemia and respiratory alkalosis. The PaCO 2 is often normal but may be decreased secondary to increased minute ventilation, which often accompanies atelectasis.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Evaluation",
+            "chunk_id": "atelectasis__statpearls::Evaluation::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7170886993408203,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          },
+          {
+            "text": "Atelectasis - Differential Diagnosis: The differential diagnosis of atelectasis should include:\nPleural effusion\nPulmonary embolism\nForeign body.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Differential Diagnosis",
+            "chunk_id": "atelectasis__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.6843980550765991,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Pneumonia",
+        "class_index": 6,
+        "raw_logit": -0.06396484375,
+        "raw_probability": 0.4840142391708746,
+        "calibrated_probability": 0.41989801327229404,
+        "threshold": 0.4258439540863037,
+        "above_threshold": false,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.4158439540863037,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Infiltration",
+        "class_index": 3,
+        "raw_logit": -0.12890625,
+        "raw_probability": 0.4678179887239768,
+        "calibrated_probability": 0.3426925067074429,
+        "threshold": 0.351311057806015,
+        "above_threshold": false,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.341311057806015,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Fibrosis",
+        "class_index": 11,
+        "raw_logit": -0.421875,
+        "raw_probability": 0.3960681662740417,
+        "calibrated_probability": 0.10606438864887495,
+        "threshold": 0.49508678913116455,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48508678913116454,
+          0.9876490235328674
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Nodule",
+        "class_index": 5,
+        "raw_logit": -0.45703125,
+        "raw_probability": 0.3876903297319391,
+        "calibrated_probability": 0.090362263861155,
+        "threshold": 0.4730486273765564,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4630486273765564,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Effusion",
+        "class_index": 2,
+        "raw_logit": -0.5,
+        "raw_probability": 0.37754066879814546,
+        "calibrated_probability": 0.07403312682562527,
+        "threshold": 0.49218809604644775,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48218809604644775,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumothorax",
+        "class_index": 7,
+        "raw_logit": -0.51171875,
+        "raw_probability": 0.37479069691957606,
+        "calibrated_probability": 0.07007508292342288,
+        "threshold": 0.4436004161834717,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43360041618347167,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Consolidation",
+        "class_index": 8,
+        "raw_logit": -0.5625,
+        "raw_probability": 0.3629692055196168,
+        "calibrated_probability": 0.055090257175625275,
+        "threshold": 0.44577082991600037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43577082991600036,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pleural_Thickening",
+        "class_index": 12,
+        "raw_logit": -0.6015625,
+        "raw_probability": 0.3539862998097729,
+        "calibrated_probability": 0.045673581005829154,
+        "threshold": 0.581303060054779,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.571303060054779,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Mass",
+        "class_index": 4,
+        "raw_logit": -0.6328125,
+        "raw_probability": 0.3468730857796916,
+        "calibrated_probability": 0.03926439568304556,
+        "threshold": 0.49578869342803955,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48578869342803954,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Hernia",
+        "class_index": 13,
+        "raw_logit": -0.9140625,
+        "raw_probability": 0.2861692439575231,
+        "calibrated_probability": 0.009771755189539977,
+        "threshold": 0.43254271149635315,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.42254271149635314,
+          0.99
+        ],
+        "bands_method": "percentile"
+      },
+      {
+        "name": "Cardiomegaly",
+        "class_index": 1,
+        "raw_logit": -0.9375,
+        "raw_probability": 0.28140560742914383,
+        "calibrated_probability": 0.008689943775541754,
+        "threshold": 0.4967803955078125,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4867803955078125,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Emphysema",
+        "class_index": 10,
+        "raw_logit": -1.0234375,
+        "raw_probability": 0.2643583582610753,
+        "calibrated_probability": 0.005646408801028856,
+        "threshold": 0.4987030327320099,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4887030327320099,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Edema",
+        "class_index": 9,
+        "raw_logit": -1.15625,
+        "raw_probability": 0.23934934732271168,
+        "calibrated_probability": 0.0028942569076925214,
+        "threshold": 0.5520567893981934,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.5420567893981934,
+          0.99
+        ],
+        "bands_method": "reliability"
+      }
+    ],
+    "overall_assessment": "abnormal",
+    "summary": {
+      "n_above_threshold": 1,
+      "max_calibrated_probability": 0.9705003941090558
+    }
+  },
+  "report": "### Chest Radiograph Report\n\n**Findings:**\n- **Atelectasis:** There is a high likelihood (calibrated probability: 0.971) of atelectasis based on the observed lung opacification and possible loss of lung volume. This finding aligns with the clinical presentation of atelectasis, where lung opacification and displacement of interlobar fissures may be noted [1].\n\n**Impression:**\n- The chest radiograph demonstrates findings consistent with atelectasis, which could be due to various causes such as post-surgical complications, obstructive processes, or other underlying conditions. Further evaluation with clinical correlation is recommended.\n\n**Recommendations:**\n- Consider obtaining a follow-up chest radiograph to monitor the progression of the atelectasis.\n- Consult with a pulmonologist for further evaluation, including potential imaging studies such as a CT scan or bronchoscopy, depending on the clinical context and patient history [2].\n- Evaluate for potential underlying causes such as pleural effusion, pulmonary embolism, or foreign body aspiration [3].\n\n**References:**\n[1] https://en.wikipedia.org/wiki/Atelectasis\n[2] https://www.ncbi.nlm.nih.gov/books/4820146/\n[3] https://www.ncbi.nlm.nih.gov/books/4820146/\n\n**Note:** The above report is based on the provided structured findings and retrieved evidence passages. Additional clinical information and patient history are crucial for a comprehensive interpretation."
+}

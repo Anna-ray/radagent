@@ -1,0 +1,371 @@
+{
+  "timings": {
+    "image": "00000099_008.png",
+    "pre_ms": 19.263865999619156,
+    "spec_ms": 8321.550730000126,
+    "findings_ms": 0.21312299986675498,
+    "n_above": 3,
+    "rag_ms": 10336.701884999911,
+    "vlm_ms": 9658.981599000072,
+    "vlm_prompt_tokens": 3114,
+    "vlm_completion_tokens": 400,
+    "total_ms": 28336.711202999595
+  },
+  "findings": {
+    "schema_version": "1.0",
+    "image_meta": {
+      "path": "data/samples/00000099_008.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "modality": "CXR"
+    },
+    "model_meta": {
+      "checkpoint": "runs/nih14_convnextv2_base_384/best.pt",
+      "tta": "hflip",
+      "calibration_temperature": 0.19791588187217712
+    },
+    "findings": [
+      {
+        "name": "Effusion",
+        "class_index": 2,
+        "raw_logit": 1.546875,
+        "raw_probability": 0.8244619263765707,
+        "calibrated_probability": 0.9995968588011641,
+        "threshold": 0.49218809604644775,
+        "above_threshold": true,
+        "confidence_level": "high",
+        "confidence_band": [
+          0.48218809604644775,
+          0.99
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Pleural effusion - Imaging: A pleural effusion appears as an area of whiteness on a standard posteroanterior chest X-ray. Normally, the space between the visceral pleura and the parietal pleura cannot be seen. A pleural effusion infiltrates the space between these layers. Because the pleural effusion has a density similar to water, it can be seen on radiographs. Since the effusion has greater density than the rest of the lung, it gravitates towards the lower portions of the pleural cavity. The pleural effusion behaves according to basic fluid dynamics, conforming to the shape of pleural space, which is determined by the lung and chest wall. If the pleural space contains both air and fluid, then an air-fluid level that is horizontal will be present, instead of conforming to the lung space. Chest radiographs in the lateral decubitus position (with the patient lying on the side of the pleural effusion) are more sensitive and can detect as little as 50 mL of fluid. Between 250 and 600mL of fluid must be present before upright chest X-rays can detect a pleural effusion (e.g., blunted costophrenic angles).\nChest computed tomography is more accurate for diagnosis and may be obtained to better characterize the presence, size, and characteristics of a pleural effusion.  Lung ultrasound, nearly as accurate as CT and more accurate than chest X-ray, is increasingly being used at the point of care to diagnose pleural effusions, with the advantage that it is a safe, dynamic, and repeatable imaging modality. To increase diagnostic accuracy of detection of pleural effusion sonographically, markers such as boomerang and VIP signs can be utilized.",
+            "source_url": "https://en.wikipedia.org/wiki/Pleural_effusion",
+            "title": "Pleural effusion",
+            "section": "Imaging",
+            "chunk_id": "pleural-effusion__wiki::Imaging::0",
+            "finding_keys": [
+              "Effusion"
+            ],
+            "score": 0.6531428098678589,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Pleural Effusion - Evaluation: Evaluation of suspected MPE cases is often accomplished using various modalities. Specific techniques involve imaging and histopathological diagnosis, as discussed below.\nImaging is crucial in diagnosing MPE as it helps detect and evaluate pleural fluid accumulation, assess the extent of pleural involvement, identify underlying malignancies, guide thoracentesis, and monitor treatment response. Detailed visualization of pleural fluid and underlying structures facilitates precise placement of thoracentesis or chest tubes, helps in planning and monitoring pleurodesis, and enables the assessment of tumor response to chemotherapy or radiotherapy.\nChest radiograph\nA posteroanterior chest radiograph is usually the first-line investigation used for evaluating the signs and symptoms of pleural effusion in the cancer setting. [88] A minimum quantity of 200 mL of fluid must be present in the pleural space for the diagnosis to be made on a posteroanterior chest radiograph. In comparison, 50 mL of fluid may be visible on a lateral chest radiograph. [89] Costophrenic angle blunting on the posteroanterior view requires the presence of 175 mL of fluid. [90] The fluid volume of fewer than 500 mL (detected in roughly 10%-15% effusion) does not usually produce symptoms.\nCostophrenic angle blunting, mediastinal shift, rib crowding, and hemidiaphragm elevation are radiographic findings that may point toward a diagnosis. A massive effusion occupies an entire hemithorax and is more commonly associated with a mediastinal shift and diaphragmatic inversion. The presence of a massive effusion, loculation, and loss of volume of the lung ipsilateral to the involved site should increase suspicion of an underlying malignant etiology. [91] A mass lesion may also be visualized in the case of a lung primary. Hilar prominence may suggest a central lesion or lymphadenopathy. The absence of a mediastinal shift may represent underlying fibrosis (fixity of the mediastinum) or extensive pleural involvement (malignant pleural mesothelioma). [92]\nThoracic ultrasound\nThoracic ultrasonography is more sensitive than chest radiography. [93] Ultrasonography may help diagnose smaller amounts of fluids and guide diagnostic and therapeutic procedures. [94] Transducer probes of ",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/5250290/",
+            "title": "Pleural Effusion",
+            "section": "Evaluation",
+            "chunk_id": "pleural-effusion__statpearls::Evaluation::0",
+            "finding_keys": [
+              "Effusion"
+            ],
+            "score": 0.6358548402786255,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          },
+          {
+            "text": "Pleural Effusion - Differential Diagnosis: Clinical differential diagnoses\nThese conditions include raised hemidiaphragm (ie, due to phrenic nerve palsy or liver enlargement), pleural thickening (secondary to previous tuberculosis, empyema), plaques, consolidation, and lobar collapse.\nRadiological differential diagnoses\nThese conditions include pleural thickening, benign and malignant plaques, pseudo-plaques, and inferior pulmonary ligament. Pseudo-plaques are defined as plaque-like lung opacities formed by small nodules contiguous with the visceral pleura. These plaques are formed by small coalescent nodules, commonly seen in sarcoidosis, coal workers' pneumoconiosis, and silicosis.\nHistopathological differential diagnoses\nNonspecific pleuritis arises from cytology-negative exudative pleural effusion without a definable etiology after histopathological analysis. Possible etiologies may include radiation- and chemotherapy-induced pleuritis. From 3% to 12% of patients with nonspecific pleuritis are diagnosed with a pleural malignancy upon regular surveillance.\nOther types of effusion\nParamalignant pleural effusion and MPE must be differentiated due to their distinct prognostic implications. Paramalignant effusions may result from various pathophysiological processes, including tumor-related obstruction, thoracic duct obstruction, pulmonary embolism, and hypoalbuminemia causing low colloidal osmotic pressure. Superior vena cava obstruction may occur as a late complication of mediastinal radiotherapy or due to increased venous pressures from local tumor effects. Treatment-related effusions can arise from radiotherapy, conventional chemotherapy (eg, bleomycin, procarbazine, cyclophosphamide, and methotrexate), targeted therapy (eg, dasatinib), and immunotherapy. Other causes of pleural fluid accumulation include congestive heart failure, hepatic decompensation, and renal failure.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/5250290/",
+            "title": "Pleural Effusion",
+            "section": "Differential Diagnosis",
+            "chunk_id": "pleural-effusion__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Effusion"
+            ],
+            "score": 0.635587751865387,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Atelectasis",
+        "class_index": 0,
+        "raw_logit": 0.0908203125,
+        "raw_probability": 0.5226894844072489,
+        "calibrated_probability": 0.6127492538342264,
+        "threshold": 0.4263215959072113,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.4163215959072113,
+          0.9774618744850159
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Atelectasis - Diagnosis: Clinically significant atelectasis is generally visible on chest X-ray; findings can include lung opacification and/or loss of lung volume. Post-surgical atelectasis will be bibasal in pattern. Chest CT or bronchoscopy may be necessary if the cause of atelectasis is not clinically apparent. Direct signs of atelectasis include displacement of interlobar fissures and mobile structures within the thorax, overinflation of the unaffected ipsilateral lobe or contralateral lung, and opacification of the collapsed lobe. Primarily, in a lung ultrasound the static air bronchogram is the what differentiates atelectasis from pneumonia. In addition to clinically significant findings on chest X-rays, patients may present with indirect signs and symptoms such as elevation of the diaphragm, shifting of the trachea, heart and mediastinum; displacement of the hilus and shifting granulomas.",
+            "source_url": "https://en.wikipedia.org/wiki/Atelectasis",
+            "title": "Atelectasis",
+            "section": "Diagnosis",
+            "chunk_id": "atelectasis__wiki::Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7317361831665039,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Atelectasis - Evaluation: Atelectasis is usually a clinical diagnosis in a patient with known risk factors. If imaging is warranted, chest radiography, chest computed tomography, or thoracic ultrasonography are useful when diagnosing atelectasis. A chest x-ray will reveal platelike, horizontal lines in the area of atelectatic lung tissue and may result in the displacement of interlobar fissures, pulmonary opacification, or tracheal shift toward the affected side. [8] . Atelectasis is not typically evident on conventional chest radiographs until it is significant.\nComputed tomography of the chest performed in patients with atelectasis often reveals dependent lung densities and loss of volume in the affected side of the chest.\nAtelectasis may also be directly visible with fiberoptic bronchoscopy. Fiberoptic bronchoscopy can be both diagnostic and therapeutic, often revealing the cause of any obstruction contributing to the atelectasis, such as a tumor, mucous plug, or foreign body.\nAn arterial blood gas may reveal arterial hypoxemia and respiratory alkalosis. The PaCO 2 is often normal but may be decreased secondary to increased minute ventilation, which often accompanies atelectasis.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Evaluation",
+            "chunk_id": "atelectasis__statpearls::Evaluation::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7170886993408203,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          },
+          {
+            "text": "Atelectasis - Differential Diagnosis: The differential diagnosis of atelectasis should include:\nPleural effusion\nPulmonary embolism\nForeign body.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Differential Diagnosis",
+            "chunk_id": "atelectasis__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.6843980550765991,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Consolidation",
+        "class_index": 8,
+        "raw_logit": -0.00347900390625,
+        "raw_probability": 0.4991302499006867,
+        "calibrated_probability": 0.4956055644779379,
+        "threshold": 0.44577082991600037,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.43577082991600036,
+          0.85
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Pulmonary consolidation - Radiology: Typically, an area of white lung is seen on a standard X-ray. Consolidated tissue is more radio-opaque than normally aerated lung parenchyma, so that it is clearly demonstrable in radiography and on CT scans. Consolidation is often a middle-to-late stage feature/complication in pulmonary infections.",
+            "source_url": "https://en.wikipedia.org/wiki/Pulmonary_consolidation",
+            "title": "Pulmonary consolidation",
+            "section": "Radiology",
+            "chunk_id": "consolidation__wiki::Radiology::0",
+            "finding_keys": [
+              "Consolidation"
+            ],
+            "score": 0.6674408912658691,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Pulmonary consolidation - Overview: A pulmonary consolidation is a region of normally compressible lung tissue that has been filled with liquid instead of air. The condition is marked by induration (swelling or hardening of normally soft tissue) of a normally aerated lung. It is considered a radiologic sign. Consolidation occurs through accumulation of inflammatory cellular exudate in the alveoli and adjoining ducts. The liquid can be pulmonary edema, inflammatory exudate, pus, inhaled water, or blood (from bronchial tree or hemorrhage from a pulmonary artery). Consolidation must be present to diagnose pneumonia: the signs of lobar pneumonia are characteristic and clinically referred to as consolidation.",
+            "source_url": "https://en.wikipedia.org/wiki/Pulmonary_consolidation",
+            "title": "Pulmonary consolidation",
+            "section": "Overview",
+            "chunk_id": "consolidation__wiki::Overview::0",
+            "finding_keys": [
+              "Consolidation"
+            ],
+            "score": 0.6003477573394775,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Pulmonary consolidation - Signs: Signs that consolidation may have occurred include:\n\nExpansion of the thorax on inspiration is reduced on the affected side\nVocal fremitus is increased on the affected side\nPercussion note is impaired in the affected area\nBreath sounds are bronchial\nPossible medium, late, or pan-inspiratory crackles\nVocal resonance is increased. Here, the patient's voice (or whisper, as in whispered pectoriloquy) can be heard more clearly when there is consolidation, as opposed to the healthy lung where speech sounds muffled.\nA pleural rub may be present.\nA lower PAO2 than calculated in the alveolar gas equation",
+            "source_url": "https://en.wikipedia.org/wiki/Pulmonary_consolidation",
+            "title": "Pulmonary consolidation",
+            "section": "Signs",
+            "chunk_id": "consolidation__wiki::Signs::0",
+            "finding_keys": [
+              "Consolidation"
+            ],
+            "score": 0.5963969230651855,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          }
+        ]
+      },
+      {
+        "name": "Infiltration",
+        "class_index": 3,
+        "raw_logit": -0.158203125,
+        "raw_probability": 0.4605315033125118,
+        "calibrated_probability": 0.31016558833918684,
+        "threshold": 0.351311057806015,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.341311057806015,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Mass",
+        "class_index": 4,
+        "raw_logit": -0.1640625,
+        "raw_probability": 0.45907612781063356,
+        "calibrated_probability": 0.30386699427111624,
+        "threshold": 0.49578869342803955,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48578869342803954,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Nodule",
+        "class_index": 5,
+        "raw_logit": -0.3203125,
+        "raw_probability": 0.42059959109501305,
+        "calibrated_probability": 0.1654218554682105,
+        "threshold": 0.4730486273765564,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4630486273765564,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumothorax",
+        "class_index": 7,
+        "raw_logit": -0.3984375,
+        "raw_probability": 0.40168780512292046,
+        "calibrated_probability": 0.11782750489831782,
+        "threshold": 0.4436004161834717,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43360041618347167,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pleural_Thickening",
+        "class_index": 12,
+        "raw_logit": -0.671875,
+        "raw_probability": 0.3380771241500058,
+        "calibrated_probability": 0.03245993412211218,
+        "threshold": 0.581303060054779,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.571303060054779,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Edema",
+        "class_index": 9,
+        "raw_logit": -0.71484375,
+        "raw_probability": 0.3285294332643027,
+        "calibrated_probability": 0.02629175234879788,
+        "threshold": 0.5520567893981934,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.5420567893981934,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumonia",
+        "class_index": 6,
+        "raw_logit": -1.125,
+        "raw_probability": 0.24508501313237172,
+        "calibrated_probability": 0.0033876241600747097,
+        "threshold": 0.4258439540863037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4158439540863037,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Cardiomegaly",
+        "class_index": 1,
+        "raw_logit": -1.3125,
+        "raw_probability": 0.21206880435710532,
+        "calibrated_probability": 0.0013163106453123194,
+        "threshold": 0.4967803955078125,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4867803955078125,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Fibrosis",
+        "class_index": 11,
+        "raw_logit": -1.3125,
+        "raw_probability": 0.21206880435710532,
+        "calibrated_probability": 0.0013163106453123194,
+        "threshold": 0.49508678913116455,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48508678913116454,
+          0.9876490235328674
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Emphysema",
+        "class_index": 10,
+        "raw_logit": -1.3984375,
+        "raw_probability": 0.19806417366892506,
+        "calibrated_probability": 0.0008530683164991651,
+        "threshold": 0.4987030327320099,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4887030327320099,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Hernia",
+        "class_index": 13,
+        "raw_logit": -2.109375,
+        "raw_probability": 0.10818895456207035,
+        "calibrated_probability": 2.3512919740006782e-05,
+        "threshold": 0.43254271149635315,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.42254271149635314,
+          0.99
+        ],
+        "bands_method": "percentile"
+      }
+    ],
+    "overall_assessment": "abnormal",
+    "summary": {
+      "n_above_threshold": 3,
+      "max_calibrated_probability": 0.9995968588011641
+    }
+  },
+  "report": "### Chest Radiograph Report\n\n**Patient Information:** [Patient ID]\n**Date:** [Date]\n**Requesting Physician:** [Physician Name]\n\n---\n\n**Findings:**\n\n1. **Effusion (High Probability):**\n   - There is a significant area of increased opacity in the right hemithorax, consistent with pleural effusion. This finding is supported by the presence of a fluid level and the absence of normal lung markings in this region. [1]\n\n2. **Atelectasis (Medium Probability):**\n   - There is a subtle area of decreased lung volume in the right lower lobe, suggestive of atelectasis. However, the degree of atelectasis is not definitive on this image alone. [2]\n\n3. **Consolidation (Medium Probability):**\n   - There is an area of increased opacity in the right lower lobe, which could represent consolidation. This finding is less certain without further imaging or clinical correlation. [3]\n\n---\n\n**Impression:**\n\nThe portable chest radiograph demonstrates a significant right-sided pleural effusion with associated atelectasis and possible consolidation in the right lower lobe. Further evaluation, including a contrast-enhanced CT scan, is recommended to delineate the extent of the effusion and confirm the nature of the consolidative process. [4]\n\n---\n\n**Recommendations:**\n\n1. **Immediate Consultation with a Pulmonologist:**\n   - Given the presence of a significant pleural effusion, urgent consultation with a pulmonologist is advised to discuss potential causes such as malignancy, infection, or other etiologies. [5]\n\n2. **Further Imaging:**\n   - A contrast-enhanced CT scan of the chest is strongly recommended to better characterize the pleural effusion and the nature of the consolidative process in the right lower lobe. [6]\n\n3. **Pleural Fluid Analysis:**\n   - Pleural fluid analysis should be performed to determine the etiology"
+}

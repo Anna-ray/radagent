@@ -1,0 +1,367 @@
+{
+  "timings": {
+    "image": "00000744_010.png",
+    "pre_ms": 11.161037999954715,
+    "spec_ms": 24.629268999888154,
+    "findings_ms": 0.1532950000182609,
+    "n_above": 3,
+    "rag_ms": 127.64138400007141,
+    "vlm_ms": 5890.067084000293,
+    "vlm_prompt_tokens": 3265,
+    "vlm_completion_tokens": 400,
+    "total_ms": 6053.652070000226
+  },
+  "findings": {
+    "schema_version": "1.0",
+    "image_meta": {
+      "path": "data/samples/00000744_010.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "modality": "CXR"
+    },
+    "model_meta": {
+      "checkpoint": "runs/nih14_convnextv2_base_384/best.pt",
+      "tta": "hflip",
+      "calibration_temperature": 0.19791588187217712
+    },
+    "findings": [
+      {
+        "name": "Pneumothorax",
+        "class_index": 7,
+        "raw_logit": 0.32421875,
+        "raw_probability": 0.5803520483765656,
+        "calibrated_probability": 0.8372850109518253,
+        "threshold": 0.4436004161834717,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.43360041618347167,
+          0.99
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Pneumothorax - Chest X-ray: A plain chest radiograph, ideally with the X-ray beams being projected from the back (posteroanterior, or \"PA\"), and during maximal inspiration (holding one's breath), is the most appropriate first investigation. It is not believed that routinely taking images during expiration would confer any benefit. Still, they may be useful in the detection of a pneumothorax when clinical suspicion is high but yet an inspiratory radiograph appears normal. Also, if the PA X-ray does not show a pneumothorax but there is a strong suspicion of one, lateral X-rays (with beams projecting from the side) may be performed, but this is not routine practice.\nIt is not unusual for the mediastinum (the structure between the lungs that contains the heart, great blood vessels, and large airways) to be shifted away from the affected lung due to the pressure differences. This is not equivalent to a tension pneumothorax, which is determined mainly by the constellation of symptoms, hypoxia, and shock.\nThe size of the pneumothorax (i.e. the volume of air in the pleural space) can be determined with a reasonable degree of accuracy by measuring the distance between the chest wall and the lung. This is relevant to treatment, as smaller pneumothoraces may be managed differently. An air rim of 2 cm means that the pneumothorax occupies about 50% of the hemithorax. British professional guidelines have traditionally stated that the measurement should be performed at the level of the hilum (where blood vessels and airways enter the lung) with 2 cm as the cutoff, while American guidelines state that the measurement should be done at the apex (top) of the lung with 3 cm differentiating between a \"small\" and a \"large\" pneumothorax. The latter method may overestimate the size of a pneumothorax if it is located mainly at the apex, which is a common occurrence. The various methods correlate poorly but are the best easily available ways of estimating pneumothorax size. CT scanning (see below) can provide a more accurate determination of the size of the pneumothorax, but its routine use in this setting is not recommended.\nNot all pneumothoraces are uniform; some only form a pocket of air in a particular place in the chest. Small amounts",
+            "source_url": "https://en.wikipedia.org/wiki/Pneumothorax",
+            "title": "Pneumothorax",
+            "section": "Chest X-ray",
+            "chunk_id": "tension-pneumothorax__wiki::Chest X-ray::0",
+            "finding_keys": [
+              "Pneumothorax"
+            ],
+            "score": 0.6752018928527832,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Pneumothorax - Chest X-ray: A plain chest radiograph, ideally with the X-ray beams being projected from the back (posteroanterior, or \"PA\"), and during maximal inspiration (holding one's breath), is the most appropriate first investigation. It is not believed that routinely taking images during expiration would confer any benefit. Still, they may be useful in the detection of a pneumothorax when clinical suspicion is high but yet an inspiratory radiograph appears normal. Also, if the PA X-ray does not show a pneumothorax but there is a strong suspicion of one, lateral X-rays (with beams projecting from the side) may be performed, but this is not routine practice.\nIt is not unusual for the mediastinum (the structure between the lungs that contains the heart, great blood vessels, and large airways) to be shifted away from the affected lung due to the pressure differences. This is not equivalent to a tension pneumothorax, which is determined mainly by the constellation of symptoms, hypoxia, and shock.\nThe size of the pneumothorax (i.e. the volume of air in the pleural space) can be determined with a reasonable degree of accuracy by measuring the distance between the chest wall and the lung. This is relevant to treatment, as smaller pneumothoraces may be managed differently. An air rim of 2 cm means that the pneumothorax occupies about 50% of the hemithorax. British professional guidelines have traditionally stated that the measurement should be performed at the level of the hilum (where blood vessels and airways enter the lung) with 2 cm as the cutoff, while American guidelines state that the measurement should be done at the apex (top) of the lung with 3 cm differentiating between a \"small\" and a \"large\" pneumothorax. The latter method may overestimate the size of a pneumothorax if it is located mainly at the apex, which is a common occurrence. The various methods correlate poorly but are the best easily available ways of estimating pneumothorax size. CT scanning (see below) can provide a more accurate determination of the size of the pneumothorax, but its routine use in this setting is not recommended.\nNot all pneumothoraces are uniform; some only form a pocket of air in a particular place in the chest. Small amounts",
+            "source_url": "https://en.wikipedia.org/wiki/Pneumothorax",
+            "title": "Pneumothorax",
+            "section": "Chest X-ray",
+            "chunk_id": "pneumothorax__wiki::Chest X-ray::0",
+            "finding_keys": [
+              "Pneumothorax"
+            ],
+            "score": 0.6752018928527832,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Pneumothorax - Chest X-ray:  more accurate determination of the size of the pneumothorax, but its routine use in this setting is not recommended.\nNot all pneumothoraces are uniform; some only form a pocket of air in a particular place in the chest. Small amounts of fluid may be noted on the chest X-ray (hydropneumothorax); this may be blood (hemopneumothorax). In some cases, the only significant abnormality may be the \"deep sulcus sign\", in which the normally small space between the chest wall and the diaphragm appears enlarged due to the abnormal presence of fluid.",
+            "source_url": "https://en.wikipedia.org/wiki/Pneumothorax",
+            "title": "Pneumothorax",
+            "section": "Chest X-ray",
+            "chunk_id": "tension-pneumothorax__wiki::Chest X-ray::1",
+            "finding_keys": [
+              "Pneumothorax"
+            ],
+            "score": 0.6727493405342102,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          }
+        ]
+      },
+      {
+        "name": "Atelectasis",
+        "class_index": 0,
+        "raw_logit": 0.0703125,
+        "raw_probability": 0.5175708866141864,
+        "calibrated_probability": 0.587893637772754,
+        "threshold": 0.4263215959072113,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.4163215959072113,
+          0.9774618744850159
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Atelectasis - Diagnosis: Clinically significant atelectasis is generally visible on chest X-ray; findings can include lung opacification and/or loss of lung volume. Post-surgical atelectasis will be bibasal in pattern. Chest CT or bronchoscopy may be necessary if the cause of atelectasis is not clinically apparent. Direct signs of atelectasis include displacement of interlobar fissures and mobile structures within the thorax, overinflation of the unaffected ipsilateral lobe or contralateral lung, and opacification of the collapsed lobe. Primarily, in a lung ultrasound the static air bronchogram is the what differentiates atelectasis from pneumonia. In addition to clinically significant findings on chest X-rays, patients may present with indirect signs and symptoms such as elevation of the diaphragm, shifting of the trachea, heart and mediastinum; displacement of the hilus and shifting granulomas.",
+            "source_url": "https://en.wikipedia.org/wiki/Atelectasis",
+            "title": "Atelectasis",
+            "section": "Diagnosis",
+            "chunk_id": "atelectasis__wiki::Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7317361831665039,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Atelectasis - Evaluation: Atelectasis is usually a clinical diagnosis in a patient with known risk factors. If imaging is warranted, chest radiography, chest computed tomography, or thoracic ultrasonography are useful when diagnosing atelectasis. A chest x-ray will reveal platelike, horizontal lines in the area of atelectatic lung tissue and may result in the displacement of interlobar fissures, pulmonary opacification, or tracheal shift toward the affected side. [8] . Atelectasis is not typically evident on conventional chest radiographs until it is significant.\nComputed tomography of the chest performed in patients with atelectasis often reveals dependent lung densities and loss of volume in the affected side of the chest.\nAtelectasis may also be directly visible with fiberoptic bronchoscopy. Fiberoptic bronchoscopy can be both diagnostic and therapeutic, often revealing the cause of any obstruction contributing to the atelectasis, such as a tumor, mucous plug, or foreign body.\nAn arterial blood gas may reveal arterial hypoxemia and respiratory alkalosis. The PaCO 2 is often normal but may be decreased secondary to increased minute ventilation, which often accompanies atelectasis.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Evaluation",
+            "chunk_id": "atelectasis__statpearls::Evaluation::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.7170886993408203,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          },
+          {
+            "text": "Atelectasis - Differential Diagnosis: The differential diagnosis of atelectasis should include:\nPleural effusion\nPulmonary embolism\nForeign body.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4820146/",
+            "title": "Atelectasis",
+            "section": "Differential Diagnosis",
+            "chunk_id": "atelectasis__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Atelectasis"
+            ],
+            "score": 0.6843980550765991,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Mass",
+        "class_index": 4,
+        "raw_logit": 0.0120849609375,
+        "raw_probability": 0.503021203464837,
+        "calibrated_probability": 0.5152605331205447,
+        "threshold": 0.49578869342803955,
+        "above_threshold": true,
+        "confidence_level": "medium",
+        "confidence_band": [
+          0.48578869342803954,
+          0.99
+        ],
+        "bands_method": "reliability",
+        "retrieved_passages": [
+          {
+            "text": "Chest radiograph - Diffuse shadowing: ation fibrosis\nasbestosis\nlymphangitis carcinomatosa\nPCP\nNodular pattern\n\nsarcoidosis\nsilicosis/pneumoconiosis\nextrinsic allergic alveolitis\nLangerhans cell histiocytosis\nlymphangitis carcinomatosa\nmiliary tuberculosis\nmetastases\nCystic\n\ncryptogenic fibrosing alveolitis (late stage \"honeycomb lung\")\ncystic bronchiectasis\nLangerhans cell histiocytosis\nlymphangioleiomyomatosis\n\nGround glass\n\nextrinsic allergic alveolitis\ndesquamative interstitial pneumonia\nalveolar proteinosis\ninfant respiratory distress syndrome (RDS)\nConsolidation\n\npneumonia\nalveolar haemorrhage\nalveolar cell carcinoma\nvasculitis",
+            "source_url": "https://en.wikipedia.org/wiki/Chest_radiograph",
+            "title": "Chest radiograph",
+            "section": "Diffuse shadowing",
+            "chunk_id": "chest-radiograph__wiki::Diffuse shadowing::1",
+            "finding_keys": [],
+            "score": 0.6052751541137695,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Chest radiograph - Diffuse shadowing: The differential for diffuse shadowing is very broad and can defeat even the most experienced radiologist. It is seldom possible to reach a diagnosis on the basis of the chest radiograph alone: high-resolution CT of the chest is usually required and sometimes a lung biopsy. The following features are usually noted:\n\ntype of shadowing (lines, dots or rings)\nreticular (crisscrossing lines)\ncompanion shadow (lines paralleling bony landmarks)\nnodular (many small dots)\nrings or cysts\nground glass\nconsolidation (diffuse opacity with air bronchograms)\nlocation (where is the lesion worst?)\nupper (e.g., sarcoid, tuberculosis, silicosis/pneumoconiosis, ankylosing spondylitis, Langerhans cell histiocytosis)\nlower (e.g., cryptogenic fibrosing alveolitis, connective tissue disease, asbestosis, drug reactions)\ncentral (e.g., pulmonary edema, alveolar proteinosis, lymphoma, Kaposi's sarcoma, PCP)\nperipheral (e.g., cryptogenic fibrosing alveolitis, connective tissue disease, chronic eosinophilic pneumonia, bronchiolitis obliterans organizing pneumonia)\nlung volume\nincreased (e.g., Langerhans cell histiocytosis, lymphangioleiomyomatosis, cystic fibrosis, allergic bronchopulmonary aspergillosis)\ndecreased (e.g., fibrotic lung disease, chronic sarcoidosis, chronic extrinsic allergic alveolitis)\nPleural effusions may occur with cancer, sarcoid, connective tissue diseases and lymphangioleiomyomatosis. The presence of a pleural effusion argues against pneumocystis pneumonia.\n\nReticular (linear) pattern\n(sometimes called \"reticulonodular\" because of the appearance of nodules at the intersection of the lines, even though there are no true nodules present)\nidiopathic pulmonary fibrosis\nconnective tissue disease\nsarcoidosis\nradiation fibrosis\nasbestosis\nlymphangitis carcinomatosa\nPCP\nNodular pattern\n\nsarcoidosis\nsilicosis/pneumoconiosis\nextrinsic allergic alveolitis\nLangerhans",
+            "source_url": "https://en.wikipedia.org/wiki/Chest_radiograph",
+            "title": "Chest radiograph",
+            "section": "Diffuse shadowing",
+            "chunk_id": "chest-radiograph__wiki::Diffuse shadowing::0",
+            "finding_keys": [],
+            "score": 0.599336564540863,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Cardiomegaly - Differential Diagnosis: Differentials of cardiomegaly include disorders that can result in an enlarged cardiomediastinal silhouette on a frontal (or posteroanterior) chest X-ray. These include:\nPericardial effusion\nAnterior mediastinal mass\nProminent epicardial fat pad\nMediastinal widening secondary to pulmonary/aortic pathology\nExpiratory radiograph\nAP projection\nThymus tumor [37]\nCardiac neoplasms\nMyocarditis",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/4781686/",
+            "title": "Cardiomegaly",
+            "section": "Differential Diagnosis",
+            "chunk_id": "cardiomegaly__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Cardiomegaly"
+            ],
+            "score": 0.5942662358283997,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Effusion",
+        "class_index": 2,
+        "raw_logit": -0.0986328125,
+        "raw_probability": 0.47536176791694884,
+        "calibrated_probability": 0.37792680125695505,
+        "threshold": 0.49218809604644775,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48218809604644775,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Infiltration",
+        "class_index": 3,
+        "raw_logit": -0.16015625,
+        "raw_probability": 0.4600463021237693,
+        "calibrated_probability": 0.3080580692913381,
+        "threshold": 0.351311057806015,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.341311057806015,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pleural_Thickening",
+        "class_index": 12,
+        "raw_logit": -0.22265625,
+        "raw_probability": 0.44456476901167613,
+        "calibrated_probability": 0.24508418777481847,
+        "threshold": 0.581303060054779,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.571303060054779,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Emphysema",
+        "class_index": 10,
+        "raw_logit": -0.33203125,
+        "raw_probability": 0.41774647097878526,
+        "calibrated_probability": 0.1574084593294509,
+        "threshold": 0.4987030327320099,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4887030327320099,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Nodule",
+        "class_index": 5,
+        "raw_logit": -0.44921875,
+        "raw_probability": 0.3895465312857314,
+        "calibrated_probability": 0.09365978485633997,
+        "threshold": 0.4730486273765564,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4630486273765564,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Consolidation",
+        "class_index": 8,
+        "raw_logit": -0.47265625,
+        "raw_probability": 0.3839877378565007,
+        "calibrated_probability": 0.08407945581144273,
+        "threshold": 0.44577082991600037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43577082991600036,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Fibrosis",
+        "class_index": 11,
+        "raw_logit": -0.63671875,
+        "raw_probability": 0.34598864660470574,
+        "calibrated_probability": 0.03852659880721435,
+        "threshold": 0.49508678913116455,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48508678913116454,
+          0.9876490235328674
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumonia",
+        "class_index": 6,
+        "raw_logit": -0.7578125,
+        "raw_probability": 0.3191213844321178,
+        "calibrated_probability": 0.02126990907598419,
+        "threshold": 0.4258439540863037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4158439540863037,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Cardiomegaly",
+        "class_index": 1,
+        "raw_logit": -0.92578125,
+        "raw_probability": 0.2837813906831087,
+        "calibrated_probability": 0.009215135491152745,
+        "threshold": 0.4967803955078125,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4867803955078125,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Edema",
+        "class_index": 9,
+        "raw_logit": -1.109375,
+        "raw_probability": 0.24798742624020276,
+        "calibrated_probability": 0.003664889821689726,
+        "threshold": 0.5520567893981934,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.5420567893981934,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Hernia",
+        "class_index": 13,
+        "raw_logit": -1.2109375,
+        "raw_probability": 0.2295352131664525,
+        "calibrated_probability": 0.002197038921655289,
+        "threshold": 0.43254271149635315,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.42254271149635314,
+          0.99
+        ],
+        "bands_method": "percentile"
+      }
+    ],
+    "overall_assessment": "abnormal",
+    "summary": {
+      "n_above_threshold": 3,
+      "max_calibrated_probability": 0.8372850109518253
+    }
+  },
+  "report": "### Chest Radiograph Report\n\n**Patient Information:** [Insert Patient Information]\n\n**Date:** [Insert Date]\n\n**Imaging Technique:** Posteroanterior (PA) chest X-ray\n\n---\n\n#### Findings:\n\n1. **Pneumothorax**: There is a moderate likelihood (calibrated probability: 0.837, confidence level: medium) of a pneumothorax. Evidence suggests that a pneumothorax may appear as a clear space in the lung field, often with a visible line or marking along the pleural border. This finding is consistent with the clinical presentation of a pneumothorax [1].\n\n2. **Atelectasis**: There is a moderate likelihood (calibrated probability: 0.588, confidence level: medium) of atelectasis. Features such as lung opacification and loss of lung volume are indicative of atelectasis. The displacement of interlobar fissures and the possibility of overinflation of the unaffected lung can also be observed [2].\n\n3. **Mass**: There is a moderate likelihood (calibrated probability: 0.515, confidence level: medium) of a mass. The differential diagnosis for a mass on a chest X-ray includes various conditions such as fibrosis, lymphangitis carcinomatosa, and metastases. Further evaluation with high-resolution CT or a lung biopsy may be necessary for definitive diagnosis [3].\n\n---\n\n#### Impression:\n\nThe chest X-ray reveals a moderate likelihood of a pneumothorax, atelectasis, and a potential mass. Further clinical correlation and possibly additional imaging studies (e.g., CT scan) are recommended for a definitive diagnosis.\n\n---\n\n#### Recommendations:\n\n1. **Clinical Correlation**: The findings should be correlated with the patient’s clinical history and physical examination.\n2. **Further Imaging**: A CT scan of the chest is recommended to better characterize the findings and assess the extent of the abnormalities.\n3. **Consultation"
+}

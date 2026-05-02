@@ -1,0 +1,27 @@
+[bench] loading specialist ...
+[bench] loading retriever ...
+[bench] checking vllm endpoint ...
+[bench] vllm models: ['Qwen/Qwen2.5-VL-7B-Instruct']
+[bench] 10 images
+[rag] loading embedder BAAI/bge-m3 ...
+[case   1/10] pre=13  spec=3183  rag=6325  vlm=5632  total=15152ms  n_above=3
+[case   2/10] pre=12  spec=25  rag=131  vlm=5633  total=5802ms  n_above=3
+[case   3/10] pre=11  spec=23  rag=0  vlm=2626  total=2661ms  n_above=0
+[case   4/10] pre=12  spec=22  rag=28  vlm=5482  total=5544ms  n_above=2
+[case   5/10] pre=11  spec=22  rag=28  vlm=5613  total=5674ms  n_above=3
+[case   6/10] pre=12  spec=22  rag=19  vlm=5587  total=5641ms  n_above=2
+[case   7/10] pre=12  spec=22  rag=9  vlm=4345  total=4388ms  n_above=1
+[case   8/10] pre=13  spec=25  rag=10  vlm=4564  total=4612ms  n_above=1
+[case   9/10] pre=14  spec=22  rag=0  vlm=5646  total=5682ms  n_above=0
+[case  10/10] pre=13  spec=22  rag=10  vlm=4714  total=4759ms  n_above=1
+
+================================================================
+RadAgent MI300X bench  N=10  model=Qwen/Qwen2.5-VL-7B-Instruct
+================================================================
+stage              mean   median      p95    min    max
+pre_ms               12       12       13     11     14
+spec_ms             339       22     1762     22   3183
+rag_ms              656       14     3538      0   6325
+vlm_ms             4984     5535     5640   2626   5646
+total_ms           5991     5592    10944   2661  15152
+================================================================

@@ -1,0 +1,289 @@
+{
+  "timings": {
+    "image": "00022803_000.png",
+    "pre_ms": 12.70981599964216,
+    "spec_ms": 22.010846999819478,
+    "findings_ms": 0.09660700015956536,
+    "n_above": 1,
+    "rag_ms": 9.662928999659925,
+    "vlm_ms": 4714.06383600015,
+    "vlm_prompt_tokens": 2135,
+    "vlm_completion_tokens": 335,
+    "total_ms": 4758.5440349994315
+  },
+  "findings": {
+    "schema_version": "1.0",
+    "image_meta": {
+      "path": "data/samples/00022803_000.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "modality": "CXR"
+    },
+    "model_meta": {
+      "checkpoint": "runs/nih14_convnextv2_base_384/best.pt",
+      "tta": "hflip",
+      "calibration_temperature": 0.19791588187217712
+    },
+    "findings": [
+      {
+        "name": "Hernia",
+        "class_index": 13,
+        "raw_logit": 5.125,
+        "raw_probability": 0.9940889311437562,
+        "calibrated_probability": 0.9999999999943243,
+        "threshold": 0.43254271149635315,
+        "above_threshold": true,
+        "confidence_level": "high",
+        "confidence_band": [
+          0.42254271149635314,
+          0.99
+        ],
+        "bands_method": "percentile",
+        "retrieved_passages": [
+          {
+            "text": "Hiatal Hernia - Differential Diagnosis: The differential diagnosis of hiatal hernias overlaps with that of GERD, which can be extensive. Typical heartburn is characterized by an epigastric, caustic, burning sensation rather than radiating pressure. A thorough history can distinguish GERD from acute coronary syndrome, peptic ulcer disease, biliary disorders, and pancreatitis. GERD must also be differentiated from reflux hypersensitivity or functional heartburn, which can mimic typical reflux symptoms. [27] Patients with large PEHs may present with dysphagia. The differential diagnosis of dysphagia includes peptic esophageal stricture, esophageal carcinoma, epiphrenic or Zenker diverticulum, and esophageal motility disorders such as achalasia.\nExtraesophageal GERD symptoms often arise from respiratory tract involvement, manifesting as laryngeal or pulmonary symptoms. Determining the underlying cause can be challenging, requiring consideration of primary esophageal motility disorders, gastric or esophageal carcinoma, and primary pulmonary disease. Alternative etiologies should be investigated when the primary workup is inconclusive. Consultation with a pulmonologist is frequently warranted in such cases. [28] Appropriate diagnostic workup, including EGD and barium esophagram, is essential for establishing an accurate diagnosis. Assessment findings also guide subsequent management.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/5067496/",
+            "title": "Hiatal Hernia",
+            "section": "Differential Diagnosis",
+            "chunk_id": "hiatal-hernia__statpearls::Differential Diagnosis::0",
+            "finding_keys": [
+              "Hernia"
+            ],
+            "score": 0.6367605924606323,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          },
+          {
+            "text": "Hiatal hernia - Diagnosis: The diagnosis of a hiatal hernia is typically made through an upper GI series, endoscopy, high resolution manometry, esophageal pH monitoring, and computed tomography (CT). Barium swallow, as in the upper GI series, allows the size, location, stricture, and stenosis of oesophagus to be seen. It can also evaluate the oesophageal movements. Endoscopy can analyse the esophageal internal surface for erosions, ulcers, and tumours.\nMeanwhile, manometry can determine the integrity of esophageal movements and the presence of esophageal achalasia. pH testing allows the quantitative analysis of acid reflux episodes. A CT scan is useful in diagnosing complications of hiatal hernia, such as gastric volvulus, perforation, pneumoperitoneum, and pneumomediastinum.",
+            "source_url": "https://en.wikipedia.org/wiki/Hiatal_hernia",
+            "title": "Hiatal hernia",
+            "section": "Diagnosis",
+            "chunk_id": "hiatal-hernia__wiki::Diagnosis::0",
+            "finding_keys": [
+              "Hernia"
+            ],
+            "score": 0.5851044058799744,
+            "license": "CC-BY-SA-4.0",
+            "source": "wikipedia"
+          },
+          {
+            "text": "Hiatal Hernia - History and Physical:  hiatal hernia are often underrecognized. Patients with hiatal hernias are frequently older and commonly have comorbid conditions that may contribute to respiratory impairment. [14]\nPhysical examination rarely confirms the diagnosis of hiatal hernia or GERD. Abnormal supraclavicular lymphadenopathy in patients presenting with heartburn and dysphagia may indicate esophageal or gastric malignancy and constitutes an important component of evaluation. [15] [16] Abdominal examination, including assessment of prior surgical incisions, is relevant in patients being considered for operative repair of hiatal hernias. The presence of ventral hernias should be documented, as they may influence the surgical approach.",
+            "source_url": "https://www.ncbi.nlm.nih.gov/books/5067496/",
+            "title": "Hiatal Hernia",
+            "section": "History and Physical",
+            "chunk_id": "hiatal-hernia__statpearls::History and Physical::1",
+            "finding_keys": [
+              "Hernia"
+            ],
+            "score": 0.5754661560058594,
+            "license": "Public Domain (StatPearls / NCBI Bookshelf)",
+            "source": "statpearls"
+          }
+        ]
+      },
+      {
+        "name": "Infiltration",
+        "class_index": 3,
+        "raw_logit": -0.546875,
+        "raw_probability": 0.3665897363221599,
+        "calibrated_probability": 0.05934721723132506,
+        "threshold": 0.351311057806015,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.341311057806015,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Atelectasis",
+        "class_index": 0,
+        "raw_logit": -1.1953125,
+        "raw_probability": 0.23231014609688014,
+        "calibrated_probability": 0.0023770916035932123,
+        "threshold": 0.4263215959072113,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4163215959072113,
+          0.9774618744850159
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Effusion",
+        "class_index": 2,
+        "raw_logit": -1.375,
+        "raw_probability": 0.20181322226037882,
+        "calibrated_probability": 0.0009602118290979797,
+        "threshold": 0.49218809604644775,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48218809604644775,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Mass",
+        "class_index": 4,
+        "raw_logit": -1.515625,
+        "raw_probability": 0.18010666408646395,
+        "calibrated_probability": 0.0004720633914448738,
+        "threshold": 0.49578869342803955,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48578869342803954,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Cardiomegaly",
+        "class_index": 1,
+        "raw_logit": -1.640625,
+        "raw_probability": 0.16238003666671086,
+        "calibrated_probability": 0.0002510753006514061,
+        "threshold": 0.4967803955078125,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4867803955078125,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pleural_Thickening",
+        "class_index": 12,
+        "raw_logit": -1.65625,
+        "raw_probability": 0.16026603232776068,
+        "calibrated_probability": 0.00023202016245106713,
+        "threshold": 0.581303060054779,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.571303060054779,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Nodule",
+        "class_index": 5,
+        "raw_logit": -1.671875,
+        "raw_probability": 0.1581743527484317,
+        "calibrated_probability": 0.00021441088698240137,
+        "threshold": 0.4730486273765564,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4630486273765564,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Fibrosis",
+        "class_index": 11,
+        "raw_logit": -1.9296875,
+        "raw_probability": 0.126785173178859,
+        "calibrated_probability": 5.8289012201990256e-05,
+        "threshold": 0.49508678913116455,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48508678913116454,
+          0.9876490235328674
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Emphysema",
+        "class_index": 10,
+        "raw_logit": -1.9453125,
+        "raw_probability": 0.12506538251690355,
+        "calibrated_probability": 5.386443079312618e-05,
+        "threshold": 0.4987030327320099,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4887030327320099,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Consolidation",
+        "class_index": 8,
+        "raw_logit": -2.0,
+        "raw_probability": 0.11920292202211755,
+        "calibrated_probability": 4.086060795664509e-05,
+        "threshold": 0.44577082991600037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43577082991600036,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumonia",
+        "class_index": 6,
+        "raw_logit": -2.03125,
+        "raw_probability": 0.11596071825396677,
+        "calibrated_probability": 3.489268029378421e-05,
+        "threshold": 0.4258439540863037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4158439540863037,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumothorax",
+        "class_index": 7,
+        "raw_logit": -2.15625,
+        "raw_probability": 0.10374862686637971,
+        "calibrated_probability": 1.8554492821893143e-05,
+        "threshold": 0.4436004161834717,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43360041618347167,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Edema",
+        "class_index": 9,
+        "raw_logit": -2.375,
+        "raw_probability": 0.08509904500702024,
+        "calibrated_probability": 6.143882249525458e-06,
+        "threshold": 0.5520567893981934,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.5420567893981934,
+          0.99
+        ],
+        "bands_method": "reliability"
+      }
+    ],
+    "overall_assessment": "abnormal",
+    "summary": {
+      "n_above_threshold": 1,
+      "max_calibrated_probability": 0.9999999999943243
+    }
+  },
+  "report": "### Chest Radiograph Report\n\n**Patient Information:** [Patient Name]\n\n**Date:** [Date]\n\n**Study ID:** [Study ID]\n\n---\n\n**Findings:**\n- **Hernia:** A hiatal hernia is identified on the chest X-ray. This finding has a calibrated probability of 1.0 and a high confidence level. The evidence supports this observation, citing the overlap in differential diagnosis with gastroesophageal reflux disease (GERD) and the need for a thorough history to differentiate between various conditions such as acute coronary syndrome, peptic ulcer disease, biliary disorders, and pancreatitis [1]. Hiatal hernias may also present with dysphagia, which should be considered in the differential diagnosis [2].\n\n**Impression:**\n- The chest X-ray reveals a hiatal hernia. Further evaluation, including an upper gastrointestinal series or endoscopy, is recommended to confirm the diagnosis and assess the severity of the condition.\n\n**Recommendations:**\n- Referral to a gastroenterologist for further evaluation and management of the hiatal hernia is advised. The patient should be monitored for symptoms related to GERD, such as heartburn and dysphagia, and appropriate treatment should be initiated if indicated.\n\n**References:**\n1. Hiatal Hernia. [Online]. Available: https://www.ncbi.nlm.nih.gov/books/5067496/\n2. Hiatal Hernia. [Online]. Available: https://en.wikipedia.org/wiki/Hiatal_hernia\n\n--- \n\n*Note: The URLs provided are for reference only and may require access via a medical library or institutional network.*"
+}

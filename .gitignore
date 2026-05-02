@@ -1,16 +1,34 @@
+# ============================================================
+# RadAgent .gitignore
+# ============================================================
+
 # --- big binary artifacts (use cloud storage / git-lfs instead) ---
-runs/
-data/nih/
-data/rag/raw/
+# Note: we DON'T ignore runs/ wholesale — bench result JSONs/logs/md live there.
+# Instead we ignore by file type so small text artifacts stay trackable.
 *.pt
+*.pth
+*.ckpt
 *.npz
 *.faiss
 *.parquet
+*.safetensors
 
-# --- HF model caches ---
+# big data dirs (datasets, raw RAG sources)
+data/nih/
+data/rag/raw/
+
+# Per-experiment trash inside runs/ that should never be committed
+runs/**/*.png
+runs/**/*.jpg
+runs/**/*.jpeg
+runs/**/checkpoints/
+runs/**/tb_logs/
+runs/**/tensorboard/
+runs/**/wandb/
+
+# --- HF / model caches ---
 hf_cache/
 .cache/
-*.safetensors
 
 # --- secrets ---
 .env
@@ -40,14 +58,14 @@ env/
 .DS_Store
 Thumbs.db
 
-# --- logs ---
-*.log
-calibrate_bands.log
-predict_one.log
-scrape.log
-build_index.log
-corpus.log
-bench_*.log
+# --- logs (top-level scratch logs only — bench result logs under runs/ are kept) ---
+/calibrate_bands.log
+/predict_one.log
+/scrape.log
+/build_index.log
+/corpus.log
+/bench_*.log
+/*.log
 
 # --- temp ---
 *.tmp

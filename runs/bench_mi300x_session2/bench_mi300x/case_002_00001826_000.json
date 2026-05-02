@@ -1,0 +1,248 @@
+{
+  "timings": {
+    "image": "00001826_000.png",
+    "pre_ms": 10.82483800018963,
+    "spec_ms": 23.3644350000759,
+    "findings_ms": 0.11143000028823735,
+    "n_above": 0,
+    "rag_ms": 0.0033880000955832656,
+    "vlm_ms": 2626.2125100001867,
+    "vlm_prompt_tokens": 1553,
+    "vlm_completion_tokens": 186,
+    "total_ms": 2660.516601000836
+  },
+  "findings": {
+    "schema_version": "1.0",
+    "image_meta": {
+      "path": "data/samples/00001826_000.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "modality": "CXR"
+    },
+    "model_meta": {
+      "checkpoint": "runs/nih14_convnextv2_base_384/best.pt",
+      "tta": "hflip",
+      "calibration_temperature": 0.19791588187217712
+    },
+    "findings": [
+      {
+        "name": "Infiltration",
+        "class_index": 3,
+        "raw_logit": -0.2021484375,
+        "raw_probability": 0.44963428593373633,
+        "calibrated_probability": 0.264757584687872,
+        "threshold": 0.351311057806015,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.341311057806015,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Nodule",
+        "class_index": 5,
+        "raw_logit": -0.50390625,
+        "raw_probability": 0.37662312562705497,
+        "calibrated_probability": 0.0726914405384232,
+        "threshold": 0.4730486273765564,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4630486273765564,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumonia",
+        "class_index": 6,
+        "raw_logit": -0.66015625,
+        "raw_probability": 0.3407045130269881,
+        "calibrated_probability": 0.03437189529378744,
+        "threshold": 0.4258439540863037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4158439540863037,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Fibrosis",
+        "class_index": 11,
+        "raw_logit": -0.6953125,
+        "raw_probability": 0.33285232501292616,
+        "calibrated_probability": 0.028939767079385507,
+        "threshold": 0.49508678913116455,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48508678913116454,
+          0.9876490235328674
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pleural_Thickening",
+        "class_index": 12,
+        "raw_logit": -0.7421875,
+        "raw_probability": 0.3225259830643727,
+        "calibrated_probability": 0.022977036093044405,
+        "threshold": 0.581303060054779,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.571303060054779,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Atelectasis",
+        "class_index": 0,
+        "raw_logit": -0.76953125,
+        "raw_probability": 0.31658051502379086,
+        "calibrated_probability": 0.02007160619055814,
+        "threshold": 0.4263215959072113,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4163215959072113,
+          0.9774618744850159
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Consolidation",
+        "class_index": 8,
+        "raw_logit": -0.7890625,
+        "raw_probability": 0.31237000428514555,
+        "calibrated_probability": 0.0182198111852061,
+        "threshold": 0.44577082991600037,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43577082991600036,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Mass",
+        "class_index": 4,
+        "raw_logit": -0.86328125,
+        "raw_probability": 0.29665425467899115,
+        "calibrated_probability": 0.01259401729837092,
+        "threshold": 0.49578869342803955,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48578869342803954,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Pneumothorax",
+        "class_index": 7,
+        "raw_logit": -0.87890625,
+        "raw_probability": 0.2934044820389496,
+        "calibrated_probability": 0.011649120610281635,
+        "threshold": 0.4436004161834717,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.43360041618347167,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Cardiomegaly",
+        "class_index": 1,
+        "raw_logit": -0.8828125,
+        "raw_probability": 0.292595299011739,
+        "calibrated_probability": 0.011424057767961274,
+        "threshold": 0.4967803955078125,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4867803955078125,
+          0.85
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Effusion",
+        "class_index": 2,
+        "raw_logit": -0.9921875,
+        "raw_probability": 0.2704802220302491,
+        "calibrated_probability": 0.006605811416476066,
+        "threshold": 0.49218809604644775,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.48218809604644775,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Edema",
+        "class_index": 9,
+        "raw_logit": -1.234375,
+        "raw_probability": 0.2254166158350767,
+        "calibrated_probability": 0.0019521559533202475,
+        "threshold": 0.5520567893981934,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.5420567893981934,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Emphysema",
+        "class_index": 10,
+        "raw_logit": -1.34375,
+        "raw_probability": 0.2068940488158881,
+        "calibrated_probability": 0.0011242653214594918,
+        "threshold": 0.4987030327320099,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.4887030327320099,
+          0.99
+        ],
+        "bands_method": "reliability"
+      },
+      {
+        "name": "Hernia",
+        "class_index": 13,
+        "raw_logit": -1.921875,
+        "raw_probability": 0.12765262532179067,
+        "calibrated_probability": 6.063577706476505e-05,
+        "threshold": 0.43254271149635315,
+        "above_threshold": false,
+        "confidence_level": "low",
+        "confidence_band": [
+          0.42254271149635314,
+          0.99
+        ],
+        "bands_method": "percentile"
+      }
+    ],
+    "overall_assessment": "normal",
+    "summary": {
+      "n_above_threshold": 0,
+      "max_calibrated_probability": 0.264757584687872
+    }
+  },
+  "report": "**Report**\n\n**Patient Information:** [Not provided]\n\n**Image Type:** Chest X-ray\n\n**Findings:**\n- No significant abnormalities noted in the lung fields.\n- Cardiac silhouette appears within normal limits.\n- No pleural effusions or pneumothorax identified.\n- No bony abnormalities or fractures observed.\n- No signs of pulmonary edema or consolidation.\n\n**Impression:**\nThe chest X-ray demonstrates no acute cardiopulmonary abnormalities. The findings are within normal limits.\n\n**Recommendations:**\nNo further imaging or intervention is recommended at this time. Follow-up may be considered if symptoms persist or worsen.\n\n**References:**\n[1] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5398407/\n[2] https://pubmed.ncbi.nlm.nih.gov/26375544/\n\n**Generated by:** Radiology Assistant AI Model"
+}

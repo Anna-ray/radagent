@@ -7,7 +7,7 @@ infiltrates) and to provide grounded visual heatmaps for every finding.
 ## Quick start (RTX 4070 Ti SUPER, Windows / Linux)
 
 ```bash
-# 1. Create env
+# 1. Create .env
 conda create -n radagent python=3.11 -y
 conda activate radagent
 

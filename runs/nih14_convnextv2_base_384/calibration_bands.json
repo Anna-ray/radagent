@@ -1,0 +1,86 @@
+{
+  "bands": [
+    [
+      0.4163215959072113,
+      0.9774618744850159
+    ],
+    [
+      0.4867803955078125,
+      0.85
+    ],
+    [
+      0.48218809604644775,
+      0.99
+    ],
+    [
+      0.341311057806015,
+      0.85
+    ],
+    [
+      0.48578869342803954,
+      0.99
+    ],
+    [
+      0.4630486273765564,
+      0.85
+    ],
+    [
+      0.4158439540863037,
+      0.85
+    ],
+    [
+      0.43360041618347167,
+      0.99
+    ],
+    [
+      0.43577082991600036,
+      0.85
+    ],
+    [
+      0.5420567893981934,
+      0.99
+    ],
+    [
+      0.4887030327320099,
+      0.99
+    ],
+    [
+      0.48508678913116454,
+      0.9876490235328674
+    ],
+    [
+      0.571303060054779,
+      0.99
+    ],
+    [
+      0.42254271149635314,
+      0.99
+    ]
+  ],
+  "method": [
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "reliability",
+    "percentile"
+  ],
+  "meta": {
+    "temperature": 0.19791588187217712,
+    "n_val_samples": 8800,
+    "min_positives_for_reliability": 30,
+    "precision_low_target": 0.5,
+    "precision_high_target": 0.85,
+    "pct_low_fallback": 70.0,
+    "pct_high_fallback": 90.0,
+    "min_band_width": 0.05
+  }
+}

@@ -1,73 +1,78 @@
-# ============================================================
-# RadAgent .gitignore
-# ============================================================
-
-# --- big binary artifacts (use cloud storage / git-lfs instead) ---
-# Note: we DON'T ignore runs/ wholesale — bench result JSONs/logs/md live there.
-# Instead we ignore by file type so small text artifacts stay trackable.
-*.pt
-*.pth
-*.ckpt
-*.npz
-*.faiss
-*.parquet
-*.safetensors
-
-# big data dirs (datasets, raw RAG sources)
-data/nih/
-data/rag/raw/
-
-# Per-experiment trash inside runs/ that should never be committed
-runs/**/*.png
-runs/**/*.jpg
-runs/**/*.jpeg
-runs/**/checkpoints/
-runs/**/tb_logs/
-runs/**/tensorboard/
-runs/**/wandb/
-
-# --- HF / model caches ---
-hf_cache/
-.cache/
-
-# --- secrets ---
-.env
-*.token
-*_secret*
-amd_radagent
-amd_radagent.pub
-*.pem
-
-# --- python ---
+# ---------------- Python ----------------
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
 .pytest_cache/
+.coverage
+htmlcov/
+.tox/
 .mypy_cache/
 .ipynb_checkpoints/
 
-# --- venvs ---
-.venv/
+# ---------------- Virtual envs ----------------
 venv/
 env/
+.env
+.envrc
+.python-version
 
-# --- editor / OS ---
+# ---------------- Editor / OS ----------------
 .vscode/
 .idea/
 *.swp
+*.swo
 .DS_Store
 Thumbs.db
 
-# --- logs (top-level scratch logs only — bench result logs under runs/ are kept) ---
-/calibrate_bands.log
-/predict_one.log
-/scrape.log
-/build_index.log
-/corpus.log
-/bench_*.log
-/*.log
+# ---------------- Data (NEVER commit) ----------------
+data/nih/
+data/chexpert/
+data/samples/
+data/rag/index.faiss
+data/rag/chunks.jsonl
+data/rag/manifest.json
+data/rag/raw/
+data/rag/scrape_cache/
 
-# --- temp ---
-*.tmp
+# ---------------- Model weights (use HF Hub / Zenodo) ----------------
+runs/**/*.pt
+runs/**/*.pth
+runs/**/*.bin
+runs/**/*.safetensors
+runs/**/predictions.parquet
+runs/**/test_predictions.parquet
+
+# ---------------- Run-time outputs ----------------
+runs/**/predict_one_test/
+runs/**/predict_one/cams/
+runs/**/cams/
+runs/**/tb/
+runs/bench_*/
+
+# ---------------- Logs / temp ----------------
+*.log
+nohup.out
 tmp/
-temp/
+*.tar.gz
+*.zip
+
+# ---------------- Secrets ----------------
+.env.local
+*.pem
+*.key
+ssh_key
+*token*
+
+# ---------------- Local artifacts (allow specific small ones via !) ----------------
+# Allow keeping a placeholder eval report and metrics so judges can see results
+!runs/nih14_convnextv2_base_384/eval/test_metrics.json
+!runs/nih14_convnextv2_base_384/eval/test_report.md
+!runs/nih14_convnextv2_base_384/calibration.json
+!runs/nih14_convnextv2_base_384/calibration_bands.json
+
+# ---------------- Misc ----------------
+.cache/
+node_modules/

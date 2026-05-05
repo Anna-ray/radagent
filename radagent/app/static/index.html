@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RadAgent — Multimodal Radiology Assistant</title>
+<style>
+  /* ------- design tokens ------- */
+  :root {
+    --bg: #0f1117;
+    --bg-elev: #161922;
+    --bg-elev2: #1d2230;
+    --border: #2a3040;
+    --text: #e6e9f0;
+    --text-dim: #9aa1b3;
+    --text-muted: #6b7280;
+    --accent: #5b9dff;
+    --accent-soft: #1e3a5f;
+    --good: #3ddc97;
+    --warn: #f7b955;
+    --bad: #f06970;
+    --neutral: #4a5061;
+    --good-bg: rgba(61,220,151,0.10);
+    --warn-bg: rgba(247,185,85,0.10);
+    --bad-bg: rgba(240,105,112,0.10);
+    --neutral-bg: rgba(74,80,97,0.18);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f8fb; --bg-elev: #ffffff; --bg-elev2: #f1f3f9;
+      --border: #d8dde6; --text: #1a1f2e; --text-dim: #4b5363; --text-muted: #8b93a3;
+      --accent: #2563eb; --accent-soft: #dbeafe;
+      --good: #15803d; --warn: #b45309; --bad: #b91c1c;
+      --good-bg: rgba(21,128,61,0.10); --warn-bg: rgba(180,83,9,0.10);
+      --bad-bg: rgba(185,28,28,0.10); --neutral-bg: rgba(0,0,0,0.06);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px; line-height: 1.55;
+    min-height: 100vh;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .container {
+    max-width: 1280px; margin: 0 auto;
+    padding: 24px;
+  }
+  header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px; margin-bottom: 20px;
+  }
+  header h1 {
+    margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  header .subtitle { color: var(--text-dim); font-size: 13px; }
+  header .status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-dim);
+  }
+  .status .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--neutral);
+  }
+  .status .dot.live { background: var(--good); }
+  .status .dot.error { background: var(--bad); }
+
+  /* ------- two-column layout ------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ------- panels ------- */
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .panel h2 {
+    margin: 0 0 12px 0;
+    font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-dim);
+  }
+
+  /* ------- dropzone ------- */
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: var(--bg-elev2);
+  }
+  .dropzone:hover, .dropzone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .dropzone .label { font-weight: 500; margin-bottom: 4px; }
+  .dropzone .hint { color: var(--text-dim); font-size: 12px; }
+  .dropzone input { display: none; }
+
+  /* ------- options row ------- */
+  .options {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .options label {
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer; color: var(--text-dim);
+  }
+  .options input { margin: 0; }
+  .options select {
+    background: var(--bg-elev2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 3px 6px; font-size: 12px;
+  }
+
+  /* ------- preview ------- */
+  .preview-wrap {
+    position: relative;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    margin-top: 12px;
+  }
+  .preview-wrap img {
+    width: 100%; height: 100%; object-fit: contain;
+    display: block;
+  }
+  .preview-wrap .placeholder {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 12px;
+  }
+
+  /* ------- stage tracker ------- */
+  .stages {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .stage {
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: 4px;
+    background: var(--bg-elev2);
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .stage.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .stage.done {
+    color: var(--good);
+    background: var(--good-bg);
+  }
+  .stage .name { font-weight: 500; display: block; }
+  .stage .ms { font-size: 10px; opacity: 0.8; }
+
+  /* ------- findings table ------- */
+  table.findings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.findings th {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    font-weight: 500; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  table.findings td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  table.findings tr.above { background: var(--accent-soft); }
+  table.findings tr.above td:first-child { font-weight: 600; }
+  table.findings .prob {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12px;
+    text-align: right;
+  }
+  .band {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .band.high { background: var(--good-bg); color: var(--good); }
+  .band.medium { background: var(--warn-bg); color: var(--warn); }
+  .band.low { background: var(--neutral-bg); color: var(--text-dim); }
+
+  /* ------- evidence cards ------- */
+  .evidence {
+    background: var(--bg-elev2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .evidence .head {
+    display: flex; justify-content: space-between; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .evidence .src {
+    color: var(--text-dim); font-size: 11px;
+  }
+  .evidence .score {
+    color: var(--accent);
+    font-family: ui-monospace, monospace; font-size: 11px;
+  }
+  .evidence .title { font-weight: 600; }
+  .evidence .url {
+    font-size: 10px;
+    color: var(--text-muted);
+    word-break: break-all;
+    margin-bottom: 4px;
+  }
+  .evidence .snippet {
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* ------- gradcam grid ------- */
+  .cams {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .cam {
+    background: var(--bg-elev2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cam img {
+    width: 100%; height: auto; display: block;
+  }
+  .cam .caption {
+    padding: 6px 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ------- VLM report ------- */
+  .report {
+    background: var(--bg-elev2);
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .report.ar {
+    direction: rtl;
+    text-align: right;
+    font-family: "Segoe UI", "Tahoma", sans-serif;
+  }
+
+  /* ------- finding header within evidence list ------- */
+  .finding-group {
+    margin-bottom: 14px;
+  }
+  .finding-group .group-head {
+    font-weight: 600; font-size: 13px;
+    margin-bottom: 6px;
+    display: flex; gap: 8px; align-items: center;
+  }
+
+  /* ------- placeholders / empty states ------- */
+  .empty {
+    color: var(--text-muted); font-size: 12px;
+    text-align: center; padding: 16px;
+    font-style: italic;
+  }
+
+  /* ------- timing summary ------- */
+  .timing-pill {
+    display: inline-block;
+    padding: 1px 6px;
+    background: var(--bg-elev2);
+    border-radius: 3px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 6px;
+  }
+
+  /* ------- error banner ------- */
+  .error-banner {
+    background: var(--bad-bg);
+    border: 1px solid var(--bad);
+    color: var(--bad);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .error-banner.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <h1>RadAgent</h1>
+      <div class="subtitle">Grounded chest X-ray analysis · specialist + RAG + VLM</div>
+    </div>
+    <div class="status">
+      <span class="dot" id="ws-dot"></span>
+      <span id="ws-status">disconnected</span>
+    </div>
+  </header>
+
+  <div id="error-banner" class="error-banner hidden"></div>
+
+  <div class="grid">
+
+    <!-- ===== left column ===== -->
+    <div class="left">
+
+      <div class="panel">
+        <h2>Input</h2>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg">
+          <div class="label">Drop a chest X-ray</div>
+          <div class="hint">PNG / JPG · click to browse</div>
+        </label>
+
+        <div class="options">
+          <label>
+            Language:
+            <select id="lang-select">
+              <option value="en">English</option>
+              <option value="ar">Arabic</option>
+              <option value="bilingual">Bilingual</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="preview-wrap" id="preview-wrap">
+          <div class="placeholder">No image loaded</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Pipeline <span id="total-ms" class="timing-pill" style="display:none"></span></h2>
+        <div class="stages" id="stages">
+          <div class="stage" data-stage="preprocessing"><span class="name">preproc</span><span class="ms" data-ms></span></div>
+          <div class="stage" data-stage="specialist"><span class="name">specialist</span><span class="ms" data-ms></span></div>
+          <div class="stage" data-stage="findings_done"><span class="name">findings</span><span class="ms" data-ms></span></div>
+          <div class="stage" data-stage="retrieval_done"><span class="name">RAG</span><span class="ms" data-ms></span></div>
+          <div class="stage" data-stage="gradcam_done"><span class="name">grad-cam</span><span class="ms" data-ms></span></div>
+          <div class="stage" data-stage="vlm"><span class="name">VLM</span><span class="ms" data-ms></span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== right column ===== -->
+    <div class="right">
+
+      <div class="panel">
+        <h2>Findings</h2>
+        <div id="findings-area">
+          <div class="empty">Waiting for input</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Retrieved evidence</h2>
+        <div id="evidence-area">
+          <div class="empty">Waiting for input</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Grad-CAM heatmaps</h2>
+        <div id="cams-area">
+          <div class="empty">Waiting for input</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>VLM report</h2>
+        <div id="report-area">
+          <div class="empty">Connect VLLM_URL on the server to enable narrative reports</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+// ----- DOM refs -----
+const dz = document.getElementById("dropzone");
+const fi = document.getElementById("file-input");
+const langSel = document.getElementById("lang-select");
+const previewWrap = document.getElementById("preview-wrap");
+const wsDot = document.getElementById("ws-dot");
+const wsStatus = document.getElementById("ws-status");
+const errBanner = document.getElementById("error-banner");
+const totalMsEl = document.getElementById("total-ms");
+
+const findingsArea = document.getElementById("findings-area");
+const evidenceArea = document.getElementById("evidence-area");
+const camsArea = document.getElementById("cams-area");
+const reportArea = document.getElementById("report-area");
+
+// ----- state -----
+let ws = null;
+let stageStartTs = {};
+let pipelineStartTs = 0;
+let pendingImage = null;     // ArrayBuffer
+let pendingFilename = null;
+let pendingLang = "en";
+
+// ----- WebSocket lifecycle -----
+function connectWS() {
+  const proto = location.protocol === "https:" ? "wss" : "ws";
+  ws = new WebSocket(`${proto}://${location.host}/ws/predict`);
+
+  ws.onopen = () => {
+    setStatus("ready", "live");
+    if (pendingImage) sendCurrent();
+  };
+  ws.onclose = () => {
+    setStatus("disconnected", "");
+    setTimeout(connectWS, 2000);
+  };
+  ws.onerror = () => {
+    setStatus("error", "error");
+  };
+  ws.onmessage = (e) => {
+    let evt;
+    try { evt = JSON.parse(e.data); }
+    catch { return; }
+    handleEvent(evt);
+  };
+}
+
+function setStatus(text, cls) {
+  wsStatus.textContent = text;
+  wsDot.className = "dot" + (cls ? " " + cls : "");
+}
+
+// ----- file handling -----
+dz.addEventListener("dragover", (e) => {
+  e.preventDefault(); dz.classList.add("dragover");
+});
+dz.addEventListener("dragleave", () => dz.classList.remove("dragover"));
+dz.addEventListener("drop", (e) => {
+  e.preventDefault(); dz.classList.remove("dragover");
+  const f = e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+fi.addEventListener("change", () => {
+  const f = fi.files[0];
+  if (f) loadFile(f);
+});
+
+function loadFile(file) {
+  if (!file.type.startsWith("image/")) {
+    showError("Not an image file: " + file.type);
+    return;
+  }
+  hideError();
+  pendingFilename = file.name;
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingImage = reader.result;
+    showPreview(pendingImage);
+    sendCurrent();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showPreview(arrayBuf) {
+  const blob = new Blob([arrayBuf]);
+  const url = URL.createObjectURL(blob);
+  previewWrap.innerHTML = `<img src="${url}" alt="preview">`;
+}
+
+// ----- send pipeline request -----
+function sendCurrent() {
+  if (!ws || ws.readyState !== WebSocket.OPEN || !pendingImage) return;
+  pendingLang = langSel.value;
+  resetUI();
+
+  pipelineStartTs = performance.now();
+  // protocol: send a JSON metadata frame, then the image bytes
+  ws.send(JSON.stringify({
+    type: "image",
+    filename: pendingFilename,
+    language: pendingLang,
+  }));
+  ws.send(pendingImage);
+}
+
+// ----- UI reset -----
+function resetUI() {
+  findingsArea.innerHTML = '<div class="empty">Running...</div>';
+  evidenceArea.innerHTML = '<div class="empty">Running...</div>';
+  camsArea.innerHTML = '<div class="empty">Running...</div>';
+  reportArea.innerHTML = '<div class="empty">Running...</div>';
+  totalMsEl.style.display = "none";
+  stageStartTs = {};
+  document.querySelectorAll(".stage").forEach(s => {
+    s.classList.remove("active", "done");
+    s.querySelector("[data-ms]").textContent = "";
+  });
+  hideError();
+}
+
+// ----- event handling -----
+function handleEvent(evt) {
+  const stage = evt.stage;
+  const data = evt.data || {};
+
+  switch (stage) {
+    case "preprocessing": markStageActive("preprocessing"); break;
+    case "specialist": markStageActive("specialist"); break;
+    case "findings_done":
+      markStageActive("findings_done");
+      markStageDone("findings_done");
+      renderFindings(data.structured, data.n_above);
+      break;
+    case "retrieval": markStageActive("retrieval_done"); break;
+    case "retrieval_done":
+      markStageDone("retrieval_done");
+      renderEvidence(data.retrieved);
+      break;
+    case "gradcam": markStageActive("gradcam_done"); break;
+    case "gradcam_done":
+      markStageDone("gradcam_done");
+      renderCams(data.cams);
+      break;
+    case "vlm": markStageActive("vlm"); break;
+    case "done": handleDone(data); break;
+    case "error":
+      showError(data.error || "unknown error");
+      setStatus("error", "error");
+      break;
+  }
+}
+
+function markStageActive(stageName) {
+  const el = document.querySelector(`.stage[data-stage="${stageName}"]`);
+  if (!el) return;
+  el.classList.add("active");
+  stageStartTs[stageName] = performance.now();
+}
+
+function markStageDone(stageName) {
+  const el = document.querySelector(`.stage[data-stage="${stageName}"]`);
+  if (!el) return;
+  el.classList.remove("active");
+  el.classList.add("done");
+}
+
+function handleDone(data) {
+  // mark all remaining stages done
+  document.querySelectorAll(".stage").forEach(s => {
+    s.classList.remove("active");
+    s.classList.add("done");
+  });
+
+  // populate per-stage timings from server-side authoritative numbers
+  const t = data.timings || {};
+  // Server uses several naming conventions in different events; accept all
+  const stageMap = {
+    preprocessing: t.pre_ms ?? t.pre,
+    specialist: t.spec_ms ?? t.spec,
+    findings_done: t.findings_ms ?? t.findings,
+    retrieval_done: t.rag_ms ?? t.rag,
+    gradcam_done: t.cam_ms ?? t.gradcam,
+    vlm: t.vlm_ms ?? t.vlm,
+  };
+  Object.entries(stageMap).forEach(([k, v]) => {
+    const el = document.querySelector(`.stage[data-stage="${k}"] [data-ms]`);
+    if (el && v != null) el.textContent = formatMs(v);
+  });
+
+  const totalMs = t.total_ms ?? t.total;
+  if (totalMs != null) {
+    totalMsEl.textContent = "total: " + formatMs(totalMs);
+    totalMsEl.style.display = "inline-block";
+  }
+
+  // VLM report
+  if (data.report) {
+    renderReport(data.report, data.report_lang || pendingLang);
+  } else if (data.vlm_error) {
+    reportArea.innerHTML = `<div class="empty">VLM error: ${escapeHtml(data.vlm_error)}</div>`;
+  } else if (!data.vllm_enabled) {
+    reportArea.innerHTML = '<div class="empty">VLM disabled (set VLLM_URL on the server)</div>';
+  }
+}
+
+// ----- renderers -----
+function renderFindings(structured, nAbove) {
+  if (!structured || !structured.findings) {
+    findingsArea.innerHTML = '<div class="empty">No findings returned</div>';
+    return;
+  }
+  const findings = structured.findings;
+  const assess = structured.overall_assessment || "unknown";
+
+  const rows = findings
+    .slice()
+    .sort((a, b) => (b.calibrated_probability ?? b.probability ?? 0) -
+                    (a.calibrated_probability ?? a.probability ?? 0))
+    .map(f => {
+      const p = f.calibrated_probability ?? f.probability ?? 0;
+      const thr = f.threshold ?? "--";
+      const above = !!f.above_threshold;
+      // confidence_level is a string ("high"/"medium"/"low")
+      // confidence_band is a [low, high] tuple — different field
+      const level = String(f.confidence_level || "low").toLowerCase();
+      return `<tr class="${above ? "above" : ""}">
+        <td>${escapeHtml(f.name)}</td>
+        <td class="prob">${p.toFixed(3)}</td>
+        <td class="prob">${typeof thr === "number" ? thr.toFixed(3) : thr}</td>
+        <td><span class="band ${level}">${level}</span></td>
+        <td>${above ? "★" : ""}</td>
+      </tr>`;
+    }).join("");
+
+  findingsArea.innerHTML = `
+    <div style="margin-bottom:10px;font-size:12px;color:var(--text-dim);">
+      Assessment: <strong style="color:var(--text);">${escapeHtml(assess)}</strong>
+      · ${nAbove} finding${nAbove === 1 ? "" : "s"} above threshold
+    </div>
+    <table class="findings">
+      <thead><tr>
+        <th>Finding</th><th style="text-align:right;">Cal P</th>
+        <th style="text-align:right;">Threshold</th><th>Confidence</th><th>Above</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderEvidence(retrieved) {
+  // Server emits a dict: { "Cardiomegaly": [{title, section, text, source, url, score}, ...], ... }
+  if (!retrieved || typeof retrieved !== "object") {
+    evidenceArea.innerHTML = '<div class="empty">No findings above threshold — nothing retrieved</div>';
+    return;
+  }
+  const entries = Object.entries(retrieved);
+  if (entries.length === 0) {
+    evidenceArea.innerHTML = '<div class="empty">No findings above threshold — nothing retrieved</div>';
+    return;
+  }
+  const html = entries.map(([findingName, passages]) => {
+    if (!Array.isArray(passages) || passages.length === 0) {
+      return `<div class="finding-group">
+        <div class="group-head">${escapeHtml(findingName)}</div>
+        <div class="empty">no passages</div>
+      </div>`;
+    }
+    const passagesHtml = passages.map(p => {
+      const title = p.title || p.heading || "(untitled)";
+      const section = p.section ? ` › ${p.section}` : "";
+      const score = (typeof p.score === "number") ? p.score.toFixed(3) : "--";
+      const source = p.source || "?";
+      const url = p.url || "";
+      const snippet = truncate(p.text || p.snippet || "", 280);
+      return `<div class="evidence">
+        <div class="head">
+          <span class="src">${escapeHtml(source)}</span>
+          <span class="score">score ${score}</span>
+        </div>
+        <div class="title">${escapeHtml(title + section)}</div>
+        ${url ? `<div class="url"><a href="${escapeHtml(url)}" target="_blank">${escapeHtml(url)}</a></div>` : ""}
+        <div class="snippet">${escapeHtml(snippet)}</div>
+      </div>`;
+    }).join("");
+    return `<div class="finding-group">
+      <div class="group-head">${escapeHtml(findingName)}</div>
+      ${passagesHtml}
+    </div>`;
+  }).join("");
+  evidenceArea.innerHTML = html;
+}
+
+function renderCams(cams) {
+  // Server emits a dict: { "Cardiomegaly": "<base64png>", "Effusion": "<base64png>", ... }
+  if (!cams || typeof cams !== "object") {
+    camsArea.innerHTML = '<div class="empty">No heatmaps generated</div>';
+    return;
+  }
+  const entries = Object.entries(cams);
+  if (entries.length === 0) {
+    camsArea.innerHTML = '<div class="empty">No heatmaps generated</div>';
+    return;
+  }
+  const html = entries.map(([name, b64]) => {
+    if (!b64 || typeof b64 !== "string") return "";
+    return `<div class="cam">
+      <img src="data:image/png;base64,${b64}" alt="${escapeHtml(name)}">
+      <div class="caption">${escapeHtml(name)}</div>
+    </div>`;
+  }).filter(Boolean).join("");
+  camsArea.innerHTML = html || '<div class="empty">No heatmaps generated</div>';
+}
+
+function renderReport(report, lang) {
+  if (typeof report === "string") {
+    const isAr = lang === "ar";
+    reportArea.innerHTML = `<div class="report${isAr ? " ar" : ""}">${escapeHtml(report)}</div>`;
+  } else if (report && typeof report === "object") {
+    // bilingual case: {en: "...", ar: "..."}
+    const parts = [];
+    if (report.en) parts.push(`<div class="report">${escapeHtml(report.en)}</div>`);
+    if (report.ar) parts.push(`<div style="height:8px"></div><div class="report ar">${escapeHtml(report.ar)}</div>`);
+    reportArea.innerHTML = parts.join("") || '<div class="empty">empty report</div>';
+  } else {
+    reportArea.innerHTML = '<div class="empty">unknown report format</div>';
+  }
+}
+
+// ----- utilities -----
+function formatMs(ms) {
+  if (ms == null) return "";
+  if (ms >= 1000) return (ms / 1000).toFixed(2) + "s";
+  return Math.round(ms) + "ms";
+}
+function truncate(s, n) {
+  if (!s) return "";
+  if (s.length <= n) return s;
+  return s.slice(0, n) + "…";
+}
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+function showError(msg) {
+  errBanner.textContent = "Error: " + msg;
+  errBanner.classList.remove("hidden");
+}
+function hideError() {
+  errBanner.classList.add("hidden");
+}
+
+// ----- init -----
+connectWS();
+</script>
+</body>
+</html>

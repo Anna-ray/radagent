@@ -15,11 +15,15 @@
 
 set -euo pipefail
 
-MODEL_SIZE="${MODEL_SIZE:-11b}"
+MODEL_SIZE="${MODEL_SIZE:-qwen}"
 PORT="${PORT:-8000}"
 GPU_MEM_FRAC="${GPU_MEM_FRAC:-0.85}"   # leave room for the specialist + RAG embedder
 
 case "$MODEL_SIZE" in
+    qwen)
+        MODEL_ID="Qwen/Qwen2.5-VL-7B-Instruct"
+        MAX_MODEL_LEN=8192
+        ;;
     11b)
         MODEL_ID="meta-llama/Llama-3.2-11B-Vision-Instruct"
         MAX_MODEL_LEN=8192
@@ -29,7 +33,7 @@ case "$MODEL_SIZE" in
         MAX_MODEL_LEN=4096
         ;;
     *)
-        echo "ERROR: MODEL_SIZE must be 11b or 90b, got '$MODEL_SIZE'"
+        echo "ERROR: MODEL_SIZE must be qwen, 11b, or 90b, got '$MODEL_SIZE'"
         exit 1
         ;;
 esac

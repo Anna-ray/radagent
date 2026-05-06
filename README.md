@@ -7,9 +7,8 @@
 [![hardware](https://img.shields.io/badge/AMD_MI300X-192GB_HBM-red)](#deployment)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/)
-
-![RadAgent dashboard demo](docs/demo_main.png)
-
+demo
+![RadAgent dashboard — calibrated findings on a cardiomegaly case from NIH-14](docs/demo_main.jpg)
 ---
 
 ## The Problem
@@ -32,31 +31,33 @@ End-to-end latency: **~5 seconds per case** on a single MI300X with all three mo
 
 ## Demo
 
-![pipeline animation](docs/demo_pipeline.gif)
+The dashboard streams every pipeline stage over WebSocket. Drag-drop a chest X-ray, watch each stage light up in real time, see the final grounded report assembled with citations.
 
-```
-Input: 00000001_000.png (NIH-14 test set, ground truth: Cardiomegaly)
-↓
-Specialist:    Cardiomegaly p=0.998 [HIGH band] ★
-                Effusion p=0.400 [LOW band]
-                ... (12 other findings, all LOW)
-↓
-RAG:           3 passages retrieved
-                - Wikipedia "Heart failure > Chest X-ray" (score 0.762)
-                - StatPearls "Cardiomegaly > Evaluation"  (score 0.743)
-                - StatPearls "Cardiomegaly > Differential" (score 0.731)
-↓
-Grad-CAM:      heatmap overlaid on heart silhouette
-↓
-VLM (Qwen2.5-VL-7B on MI300X):
-                Structured Report with numbered citations [1][2][3]
-                pointing to the actual retrieved URLs
-↓
-Total: 5,640 ms (median across 10 NIH test cases)
-```
+### 1. Calibrated findings
 
-📺 [**Watch the 2-minute demo video**](docs/DEMO_VIDEO_LINK.md)
+For each of the 14 NIH classes, the specialist returns a calibrated probability and a per-class confidence band derived from val-set reliability diagrams. Above-threshold findings are starred.
 
+![Findings table — Cardiomegaly p=0.998 above threshold, all other classes correctly LOW](docs/demo_main.jpg)
+
+### 2. Retrieved evidence
+
+For each above-threshold finding, RAG retrieves top-k clinically relevant passages from the 1,078-chunk corpus (Wikipedia + StatPearls), ranked by BGE-M3 cosine similarity.
+
+![Retrieved evidence cards with source URLs and similarity scores](docs/demo_rag.jpg)
+
+### 3. Visual grounding (Grad-CAM++)
+
+Grad-CAM++ overlays show *which pixels* the specialist attended to for each finding. For Cardiomegaly the heat is precisely on the cardiac silhouette — visceral evidence the model is reading the right anatomy, not random texture.
+
+![Grad-CAM++ heatmap on the heart for Cardiomegaly](docs/demo_gradcam.jpg)
+
+### 4. Grounded VLM report
+
+Only after all three evidence layers are assembled does Qwen2.5-VL-7B-Instruct (running on AMD MI300X) compose the structured report. Every claim carries a numbered citation pointing back to a real retrieved passage.
+
+![VLM-generated structured radiology report with numbered citations linking to source URLs](docs/demo_vlm.jpg)
+
+📺 *Demo video link will be added once recorded.*
 ---
 
 ## Headline Results

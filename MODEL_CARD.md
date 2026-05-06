@@ -126,6 +126,7 @@ This is a limitation.
   title  = {RadAgent Specialist: ConvNeXt-V2 NIH-14 Multi-label Classifier},
   year   = {2026},
   note   = {Model card for the RadAgent project, AMD Developer Hackathon 2026},
-  url    = {https://github.com/<you>/radagent}
+  url    = {https://github.com/Anna-ray/radagent}
 }
 ```
+

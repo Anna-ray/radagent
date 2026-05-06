@@ -208,7 +208,7 @@ This section is the *contract* with anyone running the code. If something here d
 ### 1. Environment
 
 ```bash
-git clone https://github.com/<you>/radagent.git
+git clone https://github.com/Anna-ray/radagent.git
 cd radagent
 conda create -n radagent python=3.11 -y
 conda activate radagent
@@ -355,7 +355,7 @@ If you use RadAgent in research:
   title        = {RadAgent: A Grounded Multimodal Radiology Agent on AMD MI300X},
   year         = {2026},
   howpublished = {AMD Developer Hackathon submission, lablab.ai},
-  url          = {https://github.com/<you>/radagent}
+  url          = {https://github.com/Anna-ray/radagent}
 }
 ```
 
@@ -368,3 +368,4 @@ Built solo for the AMD Developer Hackathon 2026 (lablab.ai). Compute provided by
 ## License
 
 [MIT](LICENSE) — code only. Trained checkpoints and RAG corpus are released under their respective source licenses.
+

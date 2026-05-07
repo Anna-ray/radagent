@@ -31,8 +31,23 @@ End-to-end latency: **~5 seconds per case** on a single MI300X with all three mo
 
 ## Demo
 
-The dashboard streams every pipeline stage over WebSocket. Drag-drop a chest X-ray, watch each stage light up in real time, see the final grounded report assembled with citations.
+### v0.3 highlights — anti-hallucination side-by-side
 
+The breakthrough feature of v0.3 demonstrates *why grounding matters*. With "Compare with ungrounded baseline" toggled on, the same X-ray runs through two parallel paths:
+
+- **❌ Ungrounded** — vanilla Qwen2.5-VL with just the image and a generic "describe this chest X-ray" prompt
+- **✅ RadAgent grounded** — same VLM, conditioned on calibrated specialist findings + retrieved medical evidence
+
+In the example below (Arabic), the ungrounded panel **invents pleural effusion and pulmonary edema** that the specialist correctly identified as below-threshold. The grounded panel reports only Cardiomegaly with bracketed citations to real medical literature.
+
+![Side-by-side hallucination comparison in Arabic](docs/demo_v3/06_sidebyside_arabic.png)
+
+Reports are downloadable as clinical PDF and schema-versioned JSON audit trace:
+
+![PDF report](docs/demo_v3/07_sidebyside_english.png)
+![Audit JSON](docs/demo_v3/08_downloaded_pdf.png)
+
+Bilingual: same VLM handles English, Arabic, and bilingual mode.
 ### 1. Calibrated findings
 
 For each of the 14 NIH classes, the specialist returns a calibrated probability and a per-class confidence band derived from val-set reliability diagrams. Above-threshold findings are starred.

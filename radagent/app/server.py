@@ -62,6 +62,9 @@ from radagent.models.specialist import SpecialistCXR
 from radagent.app.audit import build_audit_trace, audit_trace_to_json_bytes
 from radagent.app.pdf_report import build_pdf_report_bytes
 
+# Agentic RAG
+from radagent.inference.agentic_rag import agentic_retrieve, self_audit_report
+
 
 # ---------------------------------------------------------------------------
 # Query templates (clinically informative per finding)
@@ -281,22 +284,55 @@ def _gradcam_b64_for_class(image_tensor: torch.Tensor, rgb: np.ndarray, class_id
         cam_engine.remove()
 
 
-def _retrieve_for_findings(structured: dict, k: int = 3) -> dict[str, list[dict]]:
+async def _retrieve_for_findings_agentic(structured: dict, k: int = 3) -> tuple[dict[str, list[dict]], dict]:
+    """Agentic retrieval: VLM evaluates sufficiency and refines queries if needed.
+    
+    Returns:
+        Tuple of (retrieved passages dict, agentic trace dict)
+    """
     out: dict[str, list[dict]] = {}
+    agentic_traces = {}
+    
     if STATE.retriever is None:
-        return out
+        return out, {"enabled": False, "reason": "no retriever"}
+    
+    if not VLLM_URL:
+        # Fall back to non-agentic retrieval if VLM not available
+        for f in structured["findings"]:
+            if not f["above_threshold"]:
+                continue
+            name = f["name"]
+            query = FINDING_QUERY_TEMPLATES.get(
+                name, f"{name} on chest radiograph: imaging features and differentials."
+            )
+            passages = STATE.retriever.query(query, k=k, finding_filter=[name])
+            if not passages:
+                passages = STATE.retriever.query(query, k=k)
+            out[name] = [p.to_dict() for p in passages]
+        return out, {"enabled": False, "reason": "no vllm"}
+    
+    # Agentic retrieval for each above-threshold finding
     for f in structured["findings"]:
         if not f["above_threshold"]:
             continue
         name = f["name"]
-        query = FINDING_QUERY_TEMPLATES.get(
+        initial_query = FINDING_QUERY_TEMPLATES.get(
             name, f"{name} on chest radiograph: imaging features and differentials."
         )
-        passages = STATE.retriever.query(query, k=k, finding_filter=[name])
-        if not passages:
-            passages = STATE.retriever.query(query, k=k)
-        out[name] = [p.to_dict() for p in passages]
-    return out
+        
+        passages, trace = await agentic_retrieve(
+            finding=f,
+            retriever=STATE.retriever,
+            initial_query=initial_query,
+            vllm_url=VLLM_URL,
+            vllm_model=VLLM_MODEL,
+            k=k,
+            max_iterations=2,
+        )
+        out[name] = passages
+        agentic_traces[name] = trace
+    
+    return out, {"enabled": True, "traces": agentic_traces}
 
 
 # ---------------------------------------------------------------------------
@@ -485,12 +521,13 @@ async def _full_pipeline(
         n_above = sum(1 for f in structured["findings"] if f["above_threshold"])
         await _emit("findings_done", {"n_above": n_above, "structured": structured})
 
-        # RAG
+        # RAG (agentic)
         t = time.time()
         await _emit("retrieval")
-        retrieved = _retrieve_for_findings(structured)
+        retrieved, agentic_trace = await _retrieve_for_findings_agentic(structured)
         rag_ms = (time.time() - t) * 1000.0
         await _emit("retrieval_done", {"retrieved": retrieved})
+        await _emit("agentic_retrieval_done", {"trace": agentic_trace})
 
         # GRAD-CAM (top-3 above-threshold)
         t = time.time()
@@ -552,6 +589,24 @@ async def _full_pipeline(
 
             vlm_ms = (time.time() - t_g) * 1000.0
 
+        # Self-audit (if VLM available and report generated)
+        self_audit = None
+        if VLLM_URL and report:
+            try:
+                t_audit = time.time()
+                self_audit = await self_audit_report(
+                    report_text=report,
+                    structured_findings=structured,
+                    retrieved_passages_by_finding=retrieved,
+                    vllm_url=VLLM_URL,
+                    vllm_model=VLLM_MODEL,
+                )
+                audit_ms = (time.time() - t_audit) * 1000.0
+                await _emit("self_audit_done", {"audit": self_audit, "audit_ms": round(audit_ms, 1)})
+            except Exception as e:
+                print(f"[agentic-rag] self-audit failed: {e}", flush=True)
+                self_audit = {"flags": [], "audit_summary": f"audit error: {e}"}
+
         total_ms = (time.time() - t_total) * 1000.0
 
         result = {
@@ -559,6 +614,8 @@ async def _full_pipeline(
             "image_filename": image_filename,
             "structured": structured,
             "retrieved": retrieved,
+            "agentic_trace": agentic_trace,
+            "self_audit": self_audit,
             "cams_b64": cams_b64,
             "input_b64": input_b64,
             "report": report,

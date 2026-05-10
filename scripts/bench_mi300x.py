@@ -94,8 +94,8 @@ def parse_args():
     p.add_argument("--vllm-max-tokens", type=int, default=400)
     p.add_argument("--output-dir", type=str, required=True)
     p.add_argument("--rag-k", type=int, default=3)
-    p.add_argument("--agentic", action="store_true",
-                   help="Enable agentic RAG (VLM-controlled retrieval + self-audit)")
+    p.add_argument("--no-agentic", action="store_true",
+                   help="Disable agentic RAG (default: enabled if VLLM available)")
     return p.parse_args()
 
 
@@ -237,13 +237,20 @@ def main():
         per["findings_ms"] = (time.perf_counter() - t0) * 1000
         per["n_above"] = findings["summary"]["n_above_threshold"]
 
-        # ---- RAG (agentic or plain) ----
-        t0 = time.perf_counter()
+        # ---- RAG (agentic by default, plain if --no-agentic or no VLLM) ----
+        t0_rag = time.perf_counter()
         agentic_trace = None
-        if args.agentic:
+        agentic_ms = 0.0
+        n_queries_refined = 0
+        
+        use_agentic = not args.no_agentic and args.vllm_url
+        
+        if use_agentic:
             # Agentic retrieval with VLM-controlled query refinement
+            t0_agentic = time.perf_counter()
             async def do_agentic_rag():
                 traces = {}
+                refined_count = 0
                 for f in findings["findings"]:
                     if not f["above_threshold"]:
                         continue
@@ -259,10 +266,21 @@ def main():
                     )
                     f["retrieved_passages"] = passages
                     traces[f["name"]] = trace
-                return traces
-            agentic_trace = asyncio.run(do_agentic_rag())
+                    
+                    # Print per-finding decision
+                    sufficient = trace["decisions"][-1]["sufficient"] if trace["decisions"] else True
+                    n_iter = trace["total_iterations"]
+                    if sufficient:
+                        print(f"[agentic-rag] {f['name']}: sufficient=True ({n_iter} iter)", flush=True)
+                    else:
+                        print(f"[agentic-rag] {f['name']}: sufficient=False, refining", flush=True)
+                        refined_count += 1
+                    
+                return traces, refined_count
+            agentic_trace, n_queries_refined = asyncio.run(do_agentic_rag())
+            agentic_ms = (time.perf_counter() - t0_agentic) * 1000
         else:
-            # Plain retrieval (original behavior)
+            # Plain retrieval (fallback)
             for f in findings["findings"]:
                 if not f["above_threshold"]:
                     continue
@@ -271,8 +289,10 @@ def main():
                 if not passages:
                     passages = retriever.query(query, k=args.rag_k)
                 f["retrieved_passages"] = [p.to_dict() for p in passages]
-        per["rag_ms"] = (time.perf_counter() - t0) * 1000
-        per["agentic_enabled"] = args.agentic
+        
+        per["rag_ms"] = (time.perf_counter() - t0_rag) * 1000
+        per["agentic_ms"] = agentic_ms if use_agentic else 0.0
+        per["n_queries_refined"] = n_queries_refined
 
         # ---- VLM call ----
         with open(ip, "rb") as fp:
@@ -297,10 +317,13 @@ def main():
             per["vlm_error"] = str(e)[:300]
             report = None
 
-        # ---- Self-audit (if agentic mode) ----
+        # ---- Self-audit (if agentic mode and report generated) ----
         self_audit = None
-        if args.agentic and report:
-            t0 = time.perf_counter()
+        audit_ms = 0.0
+        audit_grounded = True
+        
+        if use_agentic and report:
+            t0_audit = time.perf_counter()
             try:
                 # Build retrieved dict for self-audit
                 retrieved_by_finding = {}
@@ -317,11 +340,22 @@ def main():
                         vllm_model=args.vllm_model,
                     )
                 self_audit = asyncio.run(do_self_audit())
-                per["audit_ms"] = (time.perf_counter() - t0) * 1000
-                per["audit_flags"] = len(self_audit.get("flags", []))
+                audit_ms = (time.perf_counter() - t0_audit) * 1000
+                n_issues = len(self_audit.get("flags", []))
+                audit_grounded = (n_issues == 0)
+                
+                # Print audit result
+                if audit_grounded:
+                    print(f"[self-audit] grounded=True (0 issues)", flush=True)
+                else:
+                    print(f"[self-audit] grounded=False ({n_issues} issues)", flush=True)
+                    
             except Exception as e:
-                per["audit_ms"] = -1.0
-                per["audit_error"] = str(e)[:300]
+                audit_ms = -1.0
+                print(f"[self-audit] error: {e}", flush=True)
+
+        per["audit_ms"] = audit_ms
+        per["audit_grounded"] = audit_grounded if use_agentic else None
 
         per["total_ms"] = sum(per.get(k, 0) for k in
                               ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms", "audit_ms"]
@@ -345,9 +379,12 @@ def main():
         
         log_line = (f"[case {i+1:3d}/{len(image_paths)}] "
                    f"pre={per['pre_ms']:.0f}  spec={per['spec_ms']:.0f}  "
-                   f"rag={per['rag_ms']:.0f}  vlm={per.get('vlm_ms',-1):.0f}")
-        if args.agentic:
-            log_line += f"  audit={per.get('audit_ms',-1):.0f}"
+                   f"rag={per['rag_ms']:.0f}")
+        if use_agentic:
+            log_line += f"  agentic={per['agentic_ms']:.0f}"
+        log_line += f"  vlm={per.get('vlm_ms',-1):.0f}"
+        if use_agentic:
+            log_line += f"  audit={per['audit_ms']:.0f}"
         log_line += f"  total={per['total_ms']:.0f}ms  n_above={per['n_above']}"
         print(log_line, flush=True)
 
@@ -364,14 +401,24 @@ def main():
             "min": min(vals), "max": max(vals),
         }
 
-    stages = ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms", "total_ms"]
-    if args.agentic:
-        stages.insert(-1, "audit_ms")  # Insert before total_ms
+    # Determine which stages to include based on what was actually run
+    has_agentic = any(t.get("agentic_ms", 0) > 0 for t in timings)
+    has_audit = any(t.get("audit_ms", 0) > 0 for t in timings)
+    
+    stages = ["pre_ms", "spec_ms", "findings_ms", "rag_ms"]
+    if has_agentic:
+        stages.append("agentic_ms")
+    stages.append("vlm_ms")
+    if has_audit:
+        stages.append("audit_ms")
+    stages.append("total_ms")
     
     summary = {k: stat(k) for k in stages}
     summary["n_cases"] = len(timings)
     summary["vlm_model"] = args.vllm_model
-    summary["agentic_enabled"] = args.agentic
+    summary["agentic_enabled"] = has_agentic
+    summary["n_queries_refined_total"] = sum(t.get("n_queries_refined", 0) for t in timings)
+    summary["n_audit_grounded"] = sum(1 for t in timings if t.get("audit_grounded") is True)
 
     with open(out_dir / "bench_summary.json", "w", encoding="utf-8") as f:
         json.dump({"summary": summary, "timings": timings}, f, indent=2)
@@ -381,12 +428,7 @@ def main():
     print(f"RadAgent MI300X bench  N={len(timings)}  model={args.vllm_model}")
     print("=" * 64)
     print(f"{'stage':<14} {'mean':>8} {'median':>8} {'p95':>8} {'min':>6} {'max':>6}")
-    display_stages = ["pre_ms", "spec_ms", "rag_ms", "vlm_ms"]
-    if args.agentic:
-        display_stages.append("audit_ms")
-    display_stages.append("total_ms")
-    
-    for stage in display_stages:
+    for stage in stages:
         s = summary[stage]
         if s["n"] == 0:
             print(f"{stage:<14}  (no data)")
@@ -394,8 +436,11 @@ def main():
         print(f"{stage:<14} {s['mean']:>8.0f} {s['median']:>8.0f} "
               f"{s['p95']:>8.0f} {s['min']:>6.0f} {s['max']:>6.0f}")
     print("=" * 64)
-    if args.agentic:
-        print("Agentic RAG enabled: VLM-controlled retrieval + self-audit")
+    if has_agentic:
+        print(f"Agentic RAG: {summary['n_queries_refined_total']} queries refined, "
+              f"{summary['n_audit_grounded']}/{summary['n_cases']} reports grounded")
+    else:
+        print("Plain RAG (agentic disabled or no VLLM)")
 
 
 if __name__ == "__main__":

@@ -389,8 +389,10 @@
         <div class="stage" data-stage="specialist"><span class="name">specialist</span><span class="ms" data-ms></span></div>
         <div class="stage" data-stage="findings_done"><span class="name">findings</span><span class="ms" data-ms></span></div>
         <div class="stage" data-stage="retrieval_done"><span class="name">RAG</span><span class="ms" data-ms></span></div>
+        <div class="stage" data-stage="agentic_done" style="display:none"><span class="name">agentic</span><span class="ms" data-ms></span></div>
         <div class="stage" data-stage="gradcam_done"><span class="name">grad-cam</span><span class="ms" data-ms></span></div>
         <div class="stage" data-stage="vlm"><span class="name">VLM</span><span class="ms" data-ms></span></div>
+        <div class="stage" data-stage="audit_done" style="display:none"><span class="name">audit</span><span class="ms" data-ms></span></div>
       </div>
 
       <div class="download-row" id="download-row" style="display:none">
@@ -573,10 +575,14 @@ function resetUI() {
   stageStartTs = {};
   document.querySelectorAll(".stage").forEach(s => {
     s.classList.remove("active", "done");
+    s.style.display = s.dataset.stage === "agentic_done" || s.dataset.stage === "audit_done" ? "none" : "";
     const ms = s.querySelector("[data-ms]"); if (ms) ms.textContent = "";
   });
   // strip stage-* classes from preview wrap
   previewWrap.classList.forEach(c => { if (c.startsWith("stage-")) previewWrap.classList.remove(c); });
+  // Hide agentic cards
+  document.getElementById("agentic-card").style.display = "none";
+  document.getElementById("audit-card").style.display = "none";
   hideError();
 }
 
@@ -610,6 +616,25 @@ function handleEvent(evt) {
       renderEvidence(data.retrieved);
       break;
     case "agentic_retrieval_done":
+      // Show agentic stage pill
+      const agenticStage = document.querySelector('[data-stage="agentic_done"]');
+      if (agenticStage) {
+        agenticStage.style.display = "";
+        markStageActive("agentic_done");
+        markStageDone("agentic_done");
+        const ms = agenticStage.querySelector("[data-ms]");
+        if (ms && data.trace && data.trace.enabled) {
+          // Calculate total agentic time from trace
+          let totalMs = 0;
+          if (data.trace.traces) {
+            Object.values(data.trace.traces).forEach(t => {
+              // Rough estimate: each iteration ~500ms
+              totalMs += (t.total_iterations || 1) * 500;
+            });
+          }
+          ms.textContent = totalMs > 0 ? `${Math.round(totalMs)}ms` : "";
+        }
+      }
       renderAgenticTrace(data.trace);
       break;
     case "gradcam":
@@ -640,6 +665,17 @@ function handleEvent(evt) {
       }
       break;
     case "self_audit_done":
+      // Show audit stage pill
+      const auditStage = document.querySelector('[data-stage="audit_done"]');
+      if (auditStage) {
+        auditStage.style.display = "";
+        markStageActive("audit_done");
+        markStageDone("audit_done");
+        const ms = auditStage.querySelector("[data-ms]");
+        if (ms && data.audit_ms) {
+          ms.textContent = `${Math.round(data.audit_ms)}ms`;
+        }
+      }
       renderSelfAudit(data.audit);
       break;
     case "done":

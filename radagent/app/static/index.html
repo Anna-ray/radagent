@@ -204,6 +204,37 @@
   .conf-pill.medium, .conf-pill.med { background: var(--warn-bg); color: var(--warn); }
   .conf-pill.low { background: var(--neutral-bg); color: var(--text-muted); }
 
+  /* ============= Agentic trace ============= */
+  .agentic-card {
+    background: var(--bg-elev2); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 6px;
+    padding: 10px 12px; margin-bottom: 10px; font-size: 12px;
+  }
+  .agentic-card h4 {
+    margin: 0 0 6px; font-size: 13px; color: var(--text); font-weight: 600;
+  }
+  .agentic-iteration {
+    background: var(--bg-elev); border-radius: 4px; padding: 8px;
+    margin-bottom: 6px; border-left: 2px solid var(--border);
+  }
+  .agentic-iteration.sufficient { border-left-color: var(--good); }
+  .agentic-iteration.insufficient { border-left-color: var(--warn); }
+  .agentic-query {
+    font-family: "Courier New", monospace; font-size: 11px;
+    color: var(--text-dim); margin: 4px 0; padding: 4px 6px;
+    background: rgba(0,0,0,0.2); border-radius: 3px;
+  }
+  .agentic-decision {
+    font-size: 11px; color: var(--text-dim); margin-top: 4px;
+  }
+  .audit-flag {
+    background: var(--warn-bg); border-left: 3px solid var(--warn);
+    padding: 8px 10px; border-radius: 4px; margin-bottom: 6px; font-size: 12px;
+  }
+  .audit-flag.high { background: var(--bad-bg); border-left-color: var(--bad); }
+  .audit-flag .claim { font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .audit-flag .reason { color: var(--text-dim); font-size: 11px; }
+
   /* ============= Evidence cards ============= */
   .evidence-group { margin-bottom: 18px; }
   .evidence-group h3 {
@@ -376,6 +407,16 @@
     <div class="card">
       <h2>Findings <span class="meta" id="findings-meta"></span></h2>
       <div id="findings-area"><div class="empty">Drop an X-ray to start.</div></div>
+    </div>
+
+    <div class="card" id="agentic-card" style="display:none">
+      <h2>🤖 Agentic RAG Trace</h2>
+      <div id="agentic-area"></div>
+    </div>
+
+    <div class="card" id="audit-card" style="display:none">
+      <h2>🔍 Self-Audit</h2>
+      <div id="audit-area"></div>
     </div>
 
     <div class="card">
@@ -568,6 +609,9 @@ function handleEvent(evt) {
       markStageDone("retrieval_done");
       renderEvidence(data.retrieved);
       break;
+    case "agentic_retrieval_done":
+      renderAgenticTrace(data.trace);
+      break;
     case "gradcam":
       markStageActive("gradcam_done");
       break;
@@ -594,6 +638,9 @@ function handleEvent(evt) {
       if (lastReportGrounded || lastReportUngrounded) {
         renderReportSplit(lastReportGrounded, lastReportUngrounded, data.vlm_ungrounded_error);
       }
+      break;
+    case "self_audit_done":
+      renderSelfAudit(data.audit);
       break;
     case "done":
       markStageDone("vlm");

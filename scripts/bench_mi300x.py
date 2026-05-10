@@ -5,8 +5,9 @@ End-to-end RadAgent benchmark on MI300X.
 
 Pipeline measured per case:
   1. Specialist forward (CXR -> 14 calibrated probabilities)
-  2. RAG retrieval (per above-threshold finding)
+  2. RAG retrieval (per above-threshold finding) - with optional agentic mode
   3. VLM call (vLLM HTTP endpoint, OpenAI-compatible)
+  4. Self-audit (if agentic mode enabled)
 
 Outputs a JSON report + a CSV with per-image timings, and prints a
 summary table.
@@ -29,6 +30,7 @@ Usage on droplet:
 from __future__ import annotations
 
 import argparse
+import asyncio
 import base64
 import json
 import statistics
@@ -51,6 +53,7 @@ from radagent.inference.findings import (
     load_calibration,
     probabilities_to_findings,
 )
+from radagent.inference.agentic_rag import agentic_retrieve, self_audit_report
 from radagent.models.specialist import SpecialistCXR
 
 
@@ -91,6 +94,8 @@ def parse_args():
     p.add_argument("--vllm-max-tokens", type=int, default=400)
     p.add_argument("--output-dir", type=str, required=True)
     p.add_argument("--rag-k", type=int, default=3)
+    p.add_argument("--agentic", action="store_true",
+                   help="Enable agentic RAG (VLM-controlled retrieval + self-audit)")
     return p.parse_args()
 
 
@@ -232,17 +237,42 @@ def main():
         per["findings_ms"] = (time.perf_counter() - t0) * 1000
         per["n_above"] = findings["summary"]["n_above_threshold"]
 
-        # ---- RAG ----
+        # ---- RAG (agentic or plain) ----
         t0 = time.perf_counter()
-        for f in findings["findings"]:
-            if not f["above_threshold"]:
-                continue
-            query = f"{f['name']} on chest radiograph: imaging features and differentials."
-            passages = retriever.query(query, k=args.rag_k, finding_filter=[f["name"]])
-            if not passages:
-                passages = retriever.query(query, k=args.rag_k)
-            f["retrieved_passages"] = [p.to_dict() for p in passages]
+        agentic_trace = None
+        if args.agentic:
+            # Agentic retrieval with VLM-controlled query refinement
+            async def do_agentic_rag():
+                traces = {}
+                for f in findings["findings"]:
+                    if not f["above_threshold"]:
+                        continue
+                    query = f"{f['name']} on chest radiograph: imaging features and differentials."
+                    passages, trace = await agentic_retrieve(
+                        finding=f,
+                        retriever=retriever,
+                        initial_query=query,
+                        vllm_url=args.vllm_url,
+                        vllm_model=args.vllm_model,
+                        k=args.rag_k,
+                        max_iterations=2,
+                    )
+                    f["retrieved_passages"] = passages
+                    traces[f["name"]] = trace
+                return traces
+            agentic_trace = asyncio.run(do_agentic_rag())
+        else:
+            # Plain retrieval (original behavior)
+            for f in findings["findings"]:
+                if not f["above_threshold"]:
+                    continue
+                query = f"{f['name']} on chest radiograph: imaging features and differentials."
+                passages = retriever.query(query, k=args.rag_k, finding_filter=[f["name"]])
+                if not passages:
+                    passages = retriever.query(query, k=args.rag_k)
+                f["retrieved_passages"] = [p.to_dict() for p in passages]
         per["rag_ms"] = (time.perf_counter() - t0) * 1000
+        per["agentic_enabled"] = args.agentic
 
         # ---- VLM call ----
         with open(ip, "rb") as fp:
@@ -267,21 +297,59 @@ def main():
             per["vlm_error"] = str(e)[:300]
             report = None
 
+        # ---- Self-audit (if agentic mode) ----
+        self_audit = None
+        if args.agentic and report:
+            t0 = time.perf_counter()
+            try:
+                # Build retrieved dict for self-audit
+                retrieved_by_finding = {}
+                for f in findings["findings"]:
+                    if f.get("above_threshold") and f.get("retrieved_passages"):
+                        retrieved_by_finding[f["name"]] = f["retrieved_passages"]
+                
+                async def do_self_audit():
+                    return await self_audit_report(
+                        report_text=report,
+                        structured_findings=findings,
+                        retrieved_passages_by_finding=retrieved_by_finding,
+                        vllm_url=args.vllm_url,
+                        vllm_model=args.vllm_model,
+                    )
+                self_audit = asyncio.run(do_self_audit())
+                per["audit_ms"] = (time.perf_counter() - t0) * 1000
+                per["audit_flags"] = len(self_audit.get("flags", []))
+            except Exception as e:
+                per["audit_ms"] = -1.0
+                per["audit_error"] = str(e)[:300]
+
         per["total_ms"] = sum(per.get(k, 0) for k in
-                              ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms"]
+                              ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms", "audit_ms"]
                               if isinstance(per.get(k), (int, float)) and per[k] > 0)
         timings.append(per)
 
         # Write per-image artifact
         out_path = out_dir / f"case_{i:03d}_{ip.stem}.json"
+        artifact = {
+            "timings": per,
+            "findings": findings,
+            "report": report,
+        }
+        if agentic_trace:
+            artifact["agentic_trace"] = agentic_trace
+        if self_audit:
+            artifact["self_audit"] = self_audit
+        
         with open(out_path, "w", encoding="utf-8") as f:
-            json.dump({"timings": per, "findings": findings, "report": report},
-                      f, indent=2, ensure_ascii=False)
-        print(f"[case {i+1:3d}/{len(image_paths)}] "
-              f"pre={per['pre_ms']:.0f}  spec={per['spec_ms']:.0f}  "
-              f"rag={per['rag_ms']:.0f}  vlm={per.get('vlm_ms',-1):.0f}  "
-              f"total={per['total_ms']:.0f}ms  n_above={per['n_above']}",
-              flush=True)
+            json.dump(artifact, f, indent=2, ensure_ascii=False)
+        
+        log_line = (f"[case {i+1:3d}/{len(image_paths)}] "
+                   f"pre={per['pre_ms']:.0f}  spec={per['spec_ms']:.0f}  "
+                   f"rag={per['rag_ms']:.0f}  vlm={per.get('vlm_ms',-1):.0f}")
+        if args.agentic:
+            log_line += f"  audit={per.get('audit_ms',-1):.0f}"
+        log_line += f"  total={per['total_ms']:.0f}ms  n_above={per['n_above']}"
+        print(log_line, flush=True)
 
     # ---- summary ----
     def stat(key: str) -> dict:
@@ -296,10 +364,14 @@ def main():
             "min": min(vals), "max": max(vals),
         }
 
-    summary = {k: stat(k) for k in
-               ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms", "total_ms"]}
+    stages = ["pre_ms", "spec_ms", "findings_ms", "rag_ms", "vlm_ms", "total_ms"]
+    if args.agentic:
+        stages.insert(-1, "audit_ms")  # Insert before total_ms
+    
+    summary = {k: stat(k) for k in stages}
     summary["n_cases"] = len(timings)
     summary["vlm_model"] = args.vllm_model
+    summary["agentic_enabled"] = args.agentic
 
     with open(out_dir / "bench_summary.json", "w", encoding="utf-8") as f:
         json.dump({"summary": summary, "timings": timings}, f, indent=2)
@@ -309,7 +381,12 @@ def main():
     print(f"RadAgent MI300X bench  N={len(timings)}  model={args.vllm_model}")
     print("=" * 64)
     print(f"{'stage':<14} {'mean':>8} {'median':>8} {'p95':>8} {'min':>6} {'max':>6}")
-    for stage in ["pre_ms", "spec_ms", "rag_ms", "vlm_ms", "total_ms"]:
+    display_stages = ["pre_ms", "spec_ms", "rag_ms", "vlm_ms"]
+    if args.agentic:
+        display_stages.append("audit_ms")
+    display_stages.append("total_ms")
+    
+    for stage in display_stages:
         s = summary[stage]
         if s["n"] == 0:
             print(f"{stage:<14}  (no data)")
@@ -317,6 +394,8 @@ def main():
         print(f"{stage:<14} {s['mean']:>8.0f} {s['median']:>8.0f} "
               f"{s['p95']:>8.0f} {s['min']:>6.0f} {s['max']:>6.0f}")
     print("=" * 64)
+    if args.agentic:
+        print("Agentic RAG enabled: VLM-controlled retrieval + self-audit")
 
 
 if __name__ == "__main__":

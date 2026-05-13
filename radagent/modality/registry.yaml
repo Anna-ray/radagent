@@ -1,0 +1,137 @@
+# radagent/modality/registry.yaml
+# Universal DICOM modality registry for RadAgent v2
+# Author: Rayane Aggoune
+
+chest_xray:
+  dicom_modalities: [CR, DX]
+  body_part_filters: [CHEST]
+  specialist_model: convnextv2_base.fcmae_ft_in22k_in1k_384
+  specialist_weights: runs/nih14_convnextv2_base_384/best.pt
+  num_classes: 14
+  rag_corpus: corpus/statpearls_cxr
+  preprocessing: cxr_clahe_normalize
+  status: production
+  autonomy_tools: [triage_study, route_to_subspecialist, schedule_follow_up, flag_critical_finding]
+  description: "Chest X-ray specialist - NIH-14 trained, calibrated, production-ready"
+
+bone_xray:
+  dicom_modalities: [CR, DX]
+  body_part_filters: [SHOULDER, ELBOW, WRIST, HAND, FINGER, HUMERUS, FOREARM, FOOT, ANKLE, KNEE, HIP]
+  specialist_model: convnextv2_tiny.fcmae_ft_in22k_in1k
+  specialist_weights: weights/specialist_mura_v1.pt
+  num_classes: 7
+  rag_corpus: corpus/msk_guidelines
+  preprocessing: bone_xray_normalize
+  status: production
+  autonomy_tools: [triage_study, route_to_subspecialist]
+  description: "Bone X-ray specialist - MURA trained, 7 body parts"
+
+chest_ct:
+  dicom_modalities: [CT]
+  body_part_filters: [CHEST, THORAX]
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/statpearls_ct
+  preprocessing: ct_lung_window_hu
+  status: registered
+  autonomy_tools: []
+  description: "Chest CT - registered, specialist coming in v2.1"
+
+mammography:
+  dicom_modalities: [MG]
+  body_part_filters: [BREAST]
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/birads
+  preprocessing: mammo_normalize
+  status: registered
+  autonomy_tools: []
+  description: "Mammography - registered, specialist coming in v2.1"
+
+mri_brain:
+  dicom_modalities: [MR]
+  body_part_filters: [BRAIN, HEAD]
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/neuro_guidelines
+  preprocessing: mri_normalize
+  status: registered
+  autonomy_tools: []
+  description: "Brain MRI - registered, specialist coming in v2.1"
+
+mri_msk:
+  dicom_modalities: [MR]
+  body_part_filters: [KNEE, SHOULDER, SPINE, ANKLE, WRIST, ELBOW, HIP]
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/msk_guidelines
+  preprocessing: mri_normalize
+  status: registered
+  autonomy_tools: []
+  description: "MSK MRI - registered, specialist coming in v2.1"
+
+ultrasound:
+  dicom_modalities: [US]
+  body_part_filters: []
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/ultrasound_guidelines
+  preprocessing: us_normalize
+  status: registered
+  autonomy_tools: []
+  description: "Ultrasound - registered, specialist coming in v2.1"
+
+pet_ct:
+  dicom_modalities: [PT]
+  body_part_filters: []
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/nuclear_med
+  preprocessing: generic_normalize
+  status: registered
+  autonomy_tools: []
+  description: "PET/CT - registered, specialist coming in v2.1"
+
+nuclear_med:
+  dicom_modalities: [NM]
+  body_part_filters: []
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/nuclear_med
+  preprocessing: generic_normalize
+  status: registered
+  autonomy_tools: []
+  description: "Nuclear medicine - registered, specialist coming in v2.1"
+
+xray_angio:
+  dicom_modalities: [XA]
+  body_part_filters: []
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/interventional
+  preprocessing: generic_normalize
+  status: registered
+  autonomy_tools: []
+  description: "X-ray angiography - registered, specialist coming in v2.1"
+
+other:
+  dicom_modalities: [OT]
+  body_part_filters: []
+  specialist_model: null
+  specialist_weights: null
+  num_classes: null
+  rag_corpus: corpus/general_radiology
+  preprocessing: generic_normalize
+  status: vlm_only_fallback
+  autonomy_tools: []
+  description: "Unknown modality - VLM-only fallback with elevated uncertainty flag"
+
+# Made with Bob

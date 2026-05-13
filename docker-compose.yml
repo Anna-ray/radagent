@@ -1,0 +1,40 @@
+# RadAgent v2 — Docker Compose for Vultr Deployment
+# Author: Rayane Aggoune
+
+version: '3.8'
+
+services:
+  radagent:
+    build: .
+    container_name: radagent-v2
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FEATHERLESS_API_KEY=${FEATHERLESS_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SPEECHMATICS_API_KEY=${SPEECHMATICS_API_KEY}
+    volumes:
+      # Mount uploads directory for persistence
+      - ./uploads:/app/uploads
+      # Mount cached demo results (read-only)
+      - ./runs:/app/runs:ro
+    restart: unless-stopped
+    networks:
+      - radagent-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  radagent-network:
+    driver: bridge
+
+volumes:
+  uploads:
+    driver: local
+
+# Made with Bob

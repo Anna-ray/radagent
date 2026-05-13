@@ -1,0 +1,64 @@
+# RadAgent v2 — Docker Ignore
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (too large for container)
+data/
+!data/demo_images/
+
+# Runs (except cached demo results)
+runs/
+!runs/cached_demo/
+
+# Tests
+tests/
+*.test.py
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Build artifacts
+*.tar.gz
+*.zip
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment
+.env
+.env.local

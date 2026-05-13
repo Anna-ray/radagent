@@ -6,7 +6,7 @@ checkpoint at `runs/nih14_convnextv2_base_384/best.pt`.
 
 ## Model Details
 
-- **Person developing model**: Rayane Aggoune (solo researcher, PhD in Quantum AI)
+- **Person developing model**: Rayane Aggoune (solo researcher, PhD candidate in AI)
 - **Model date**: April 2026
 - **Model version**: v1.0 (`nih14_convnextv2_base_384/best.pt`, 1.42 GB)
 - **Model type**: 14-class multi-label image classifier

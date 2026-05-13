@@ -404,7 +404,7 @@ This is a research prototype. **Not a clinical product.** Do not use for diagnos
 - **Self-audit validation:** Compare VLM self-audit flags against human radiologist review
 - Comparative attribution study: Grad-CAM++ vs Integrated Gradients vs Expected Gradients on CheXlocalize ground-truth segmentation masks
 - CheXpert pretraining → NIH fine-tuning (~+0.01 macro AUC)
-- Federated quantum-classical extension (extending QDT-DisasterNet from UAVs to multi-hospital CXR) — separate paper
+- Federated learning extension for multi-hospital CXR — separate paper
 - Cardiothoracic ratio via lightweight U-Net segmentation (proper, not heuristic)
 - Multi-finding multi-image studies (current system: one image, multi-label)
 

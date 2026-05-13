@@ -1,0 +1,640 @@
+/**
+ * RadAgent v2 — Dashboard Extension Styles (Priority 2)
+ * Author: Rayane Aggoune
+ * 
+ * Styles for 5 new panels + CriticAgent verdict pills
+ */
+
+/* ============================================================================
+   PANEL 1: MODALITY BADGE
+   ============================================================================ */
+
+#modality-badge {
+  background: var(--bg-elev2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.modality-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modality-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.modality-details {
+  flex: 1;
+}
+
+.modality-primary {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.modality-secondary {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.status-pill.good {
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+.status-pill.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.status-pill.bad {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.status-pill.neutral {
+  background: var(--neutral-bg);
+  color: var(--text-muted);
+}
+
+/* ============================================================================
+   PANEL 2: ENHANCED SIDE-BY-SIDE COMPARISON
+   ============================================================================ */
+
+.fabricated-claim {
+  background: var(--bad-bg);
+  border-bottom: 2px solid var(--bad);
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: help;
+  transition: background 0.2s ease;
+}
+
+.fabricated-claim:hover {
+  background: rgba(240, 105, 112, 0.25);
+}
+
+.fabricated-claim.high {
+  border-bottom-width: 3px;
+  font-weight: 600;
+}
+
+.fabricated-claim.medium {
+  border-bottom-style: dashed;
+}
+
+.fabrication-summary {
+  margin-top: 12px;
+  padding: 8px 10px;
+  background: var(--bad-bg);
+  border-left: 3px solid var(--bad);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.fabrication-summary strong {
+  color: var(--bad);
+}
+
+.report-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+/* ============================================================================
+   PANEL 3: DICTATION AUDIT PANEL
+   ============================================================================ */
+
+#dictation-audit-panel {
+  display: none;
+}
+
+.dictation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dictation-column {
+  background: var(--bg-elev2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.dictation-column.full-width {
+  grid-column: 1 / -1;
+}
+
+.dictation-column h3 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.transcript-box,
+.specialist-box,
+.discrepancies-box {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.transcript-box {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.specialist-finding {
+  padding: 6px 8px;
+  background: var(--bg-elev);
+  border-left: 2px solid var(--accent);
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.discrepancy-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: var(--bg-elev);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--border);
+}
+
+.discrepancy-row.warn {
+  border-left-color: var(--warn);
+  background: var(--warn-bg);
+}
+
+.discrepancy-row.good {
+  border-left-color: var(--good);
+  background: var(--good-bg);
+}
+
+.discrepancy-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.discrepancy-row.warn .discrepancy-badge {
+  background: var(--warn);
+  color: #000;
+}
+
+.discrepancy-row.good .discrepancy-badge {
+  background: var(--good);
+  color: #000;
+}
+
+.discrepancy-details {
+  flex: 1;
+}
+
+.discrepancy-finding {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.discrepancy-reason {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ============================================================================
+   PANEL 4: AUTONOMOUS QUEUE PANEL
+   ============================================================================ */
+
+#autonomy-queue-panel {
+  display: none;
+}
+
+.autonomy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.autonomy-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.queue-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.queue-count {
+  color: var(--text-dim);
+  font-family: "Courier New", monospace;
+}
+
+.queue-indicator {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.queue-indicator.idle {
+  background: var(--neutral-bg);
+  color: var(--text-muted);
+}
+
+.queue-indicator.running {
+  background: var(--accent-soft);
+  color: var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.queue-indicator.halted {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.queue-indicator.complete {
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.autonomy-queue {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.autonomy-action {
+  background: var(--bg-elev2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.autonomy-action.good {
+  border-left-color: var(--good);
+}
+
+.autonomy-action.warn {
+  border-left-color: var(--warn);
+}
+
+.autonomy-action.bad {
+  border-left-color: var(--bad);
+}
+
+.autonomy-action:hover {
+  transform: translateY(-1px);
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.action-number {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--bg-elev);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.action-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.action-details {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.action-evidence {
+  color: var(--accent);
+}
+
+.action-replan {
+  color: var(--warn);
+  background: var(--warn-bg);
+  padding: 4px 6px;
+  border-radius: 3px;
+}
+
+.action-halt {
+  color: var(--bad);
+  background: var(--bad-bg);
+  padding: 4px 6px;
+  border-radius: 3px;
+}
+
+/* ============================================================================
+   PANEL 5: FEDERATION NETWORK PANEL
+   ============================================================================ */
+
+#federation-panel {
+  display: none;
+}
+
+.federation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.federation-section {
+  background: var(--bg-elev2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.federation-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.federation-section h3 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nodes-container,
+.rounds-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.federation-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.node-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.node-details {
+  flex: 1;
+}
+
+.node-name {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.node-stats {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: "Courier New", monospace;
+}
+
+.node-status {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.node-status.active {
+  background: var(--good-bg);
+  color: var(--good);
+}
+
+.node-status.syncing {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.federation-round {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-elev);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.round-number {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.round-auc {
+  font-family: "Courier New", monospace;
+  color: var(--accent);
+}
+
+.round-time {
+  color: var(--text-muted);
+}
+
+.privacy-counter {
+  text-align: center;
+  padding: 20px;
+  background: var(--bg-elev);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+}
+
+.privacy-counter.good {
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.privacy-counter.bad {
+  border-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.counter-value {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.privacy-counter.good .counter-value {
+  color: var(--good);
+}
+
+.privacy-counter.bad .counter-value {
+  color: var(--bad);
+}
+
+.counter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.counter-proof {
+  font-size: 11px;
+  margin-top: 10px;
+}
+
+.counter-proof a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   CRITIC AGENT VERDICT PILLS (visible on all decision panels)
+   ============================================================================ */
+
+.critic-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-left: 8px;
+  cursor: help;
+}
+
+.critic-pill.good {
+  background: var(--good-bg);
+  color: var(--good);
+  border: 1px solid var(--good);
+}
+
+.critic-pill.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid var(--warn);
+}
+
+.critic-pill.bad {
+  background: var(--bad-bg);
+  color: var(--bad);
+  border: 1px solid var(--bad);
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  .dictation-grid,
+  .federation-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dictation-column.full-width,
+  .federation-section.full-width {
+    grid-column: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .modality-badge-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .action-header {
+    flex-wrap: wrap;
+  }
+  
+  .federation-round {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* Made with Bob */

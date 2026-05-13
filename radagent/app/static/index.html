@@ -330,6 +330,7 @@
     background: var(--bad-bg); border: 1px solid var(--bad); color: var(--bad);
     padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px;
   }
+<link rel="stylesheet" href="/static/dashboard_v2_styles.css">
 </style>
 </head>
 <body>
@@ -337,9 +338,9 @@
 <header class="topbar">
   <div>
     <h1>
-      RadAgent <span class="badge">v0.3</span>
+      RadAgent <span class="badge">v2.0</span>
     </h1>
-    <div class="subtitle">Grounded chest X-ray analysis · specialist + RAG + VLM on AMD MI300X</div>
+    <div class="subtitle">Grounded, Federated, Autonomous · Milan AI Week 2026</div>
   </div>
   <div class="ws-status">
     <span class="dot" id="ws-dot"></span>
@@ -403,6 +404,10 @@
   </div>
 
   <!-- Right column: outputs -->
+    
+    <!-- v2 Panel: Modality Badge -->
+    <div id="modality-badge"></div>
+    
   <div class="col">
     <div class="error-banner" id="error-banner" style="display:none"></div>
 
@@ -433,6 +438,25 @@
 
     <div class="card">
       <h2>VLM report <span class="meta" id="vlm-meta"></span></h2>
+    
+    <!-- v2 Panel: Dictation Audit -->
+    <div class="card" id="dictation-audit-panel">
+      <h2>🎤 Voice Dictation Audit</h2>
+      <div id="dictation-audit-content"></div>
+    </div>
+    
+    <!-- v2 Panel: Autonomous Queue -->
+    <div class="card" id="autonomy-queue-panel">
+      <h2>🤖 Autonomous Workflow</h2>
+      <div id="autonomy-queue-content"></div>
+    </div>
+    
+    <!-- v2 Panel: Federation Network -->
+    <div class="card" id="federation-panel">
+      <h2>🌐 Federated Learning</h2>
+      <div id="federation-content"></div>
+    </div>
+    
       <div id="report-area" class="report-area"><div class="empty">—</div></div>
     </div>
   </div>
@@ -903,6 +927,27 @@ function escAttr(s) { return escHtml(s).replace(/"/g, "&quot;"); }
 
 // ----- boot -----
 connectWS();
+
+// ----- v2 extensions integration -----
+<script src="/static/dashboard_v2_extensions.js"></script>
+<script>
+// Hook v2 message handler into existing WebSocket
+const originalOnMessage = ws.onmessage;
+ws.onmessage = (e) => {
+  // Call original handler
+  if (originalOnMessage) originalOnMessage.call(ws, e);
+  
+  // Call v2 handler
+  try {
+    const evt = JSON.parse(e.data);
+    if (window.RadAgentV2) {
+      window.RadAgentV2.handleV2WebSocketMessage(evt);
+    }
+  } catch (err) {
+    // Ignore parse errors
+  }
+};
+</script>
 </script>
 </body>
 </html>

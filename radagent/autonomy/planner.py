@@ -13,6 +13,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 import httpx
+import os
 
 from radagent.autonomy.halt import should_halt
 from radagent.autonomy.tools import TOOL_REGISTRY, ToolResult
@@ -43,7 +44,7 @@ class WorkflowPlanner:
     Plans, executes, and replans workflows based on confidence and roadblocks.
     
     Args:
-        gemini_api_key: Google AI Studio API key for routing
+        featherless_api_key: Featherless API key for routing
         vllm_url: VLM endpoint for grounding
         vllm_model: VLM model name
         retriever_url: RAG retriever endpoint
@@ -51,12 +52,12 @@ class WorkflowPlanner:
     
     def __init__(
         self,
-        gemini_api_key: str,
+        featherless_api_key: str,
         vllm_url: str,
         vllm_model: str,
         retriever_url: str,
     ):
-        self.gemini_api_key = gemini_api_key
+        self.featherless_api_key = featherless_api_key
         self.vllm_url = vllm_url
         self.vllm_model = vllm_model
         self.retriever_url = retriever_url
@@ -64,7 +65,7 @@ class WorkflowPlanner:
     async def plan(self, study: dict) -> list[WorkflowStep]:
         """Generate initial workflow plan for a study.
         
-        Uses Gemini Flash for fast tool-call routing.
+        Uses Featherless chat completions for fast tool-call routing.
         
         Args:
             study: Study metadata with findings
@@ -72,7 +73,7 @@ class WorkflowPlanner:
         Returns:
             List of workflow steps
         """
-        # Build prompt for Gemini
+        # Build prompt for Featherless
         findings_summary = ", ".join([
             f"{f['name']} ({f['probability']:.2f})"
             for f in study.get("findings", [])
@@ -99,20 +100,33 @@ Generate a workflow plan as a JSON array of steps:
 Only include necessary steps. Not all studies need all tools.
 """
         
+        # Pivoted from Gemini to Featherless (Google project blocked)
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
-                headers={"Content-Type": "application/json"},
-                params={"key": self.gemini_api_key},
-                json={
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.0},
-                },
-            )
+            endpoint = "https://api.featherless.ai/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {os.getenv('FEATHERLESS_API_KEY')}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": "Qwen/Qwen2.5-7B-Instruct",
+                "messages": [
+                    {"role": "system", "content": "You are a radiology workflow planner."},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.3,
+                "max_tokens": 512,
+            }
+
+            response = await client.post(endpoint, headers=headers, json=payload, timeout=30.0)
             response.raise_for_status()
-            
-            content = response.json()["candidates"][0]["content"]["parts"][0]["text"]
-            
+
+            result = response.json()
+            # Featherless chat response message text
+            try:
+                content = result["choices"][0]["message"]["content"]
+            except Exception:
+                content = json.dumps(result)
+
             # Extract JSON from response
             import re
             json_match = re.search(r'\[.*\]', content, re.DOTALL)

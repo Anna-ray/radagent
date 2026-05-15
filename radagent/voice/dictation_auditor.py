@@ -11,15 +11,11 @@ Author: Rayane Aggoune
 import os
 import json
 import hashlib
+import httpx
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 
-try:
-    import google.generativeai as genai
-    GEMINI_AVAILABLE = True
-except ImportError:
-    GEMINI_AVAILABLE = False
 
 
 class DiscrepancyType(Enum):
@@ -113,31 +109,22 @@ class DictationAuditor:
     
     def __init__(
         self,
-        gemini_api_key: Optional[str] = None,
-        model_name: str = "gemini-1.5-flash",
+        featherless_api_key: Optional[str] = None,
+        model_name: str = "Qwen/Qwen2.5-7B-Instruct",
     ):
         """
         Initialize dictation auditor.
         
         Args:
-            gemini_api_key: Google AI Studio API key (or set GEMINI_API_KEY env var)
-            model_name: Gemini model to use for parsing
+            featherless_api_key: Featherless API key (or set FEATHERLESS_API_KEY env var)
+            model_name: Model name (unused; Featherless requests specify model in payload)
         """
-        if not GEMINI_AVAILABLE:
-            raise ImportError(
-                "google-generativeai not installed. "
-                "Install with: pip install google-generativeai"
-            )
-        
-        self.api_key = gemini_api_key or os.getenv("GEMINI_API_KEY")
+        # Pivoted from Gemini to Featherless (Google project blocked)
+        self.api_key = featherless_api_key or os.getenv("FEATHERLESS_API_KEY")
         if not self.api_key:
             raise ValueError(
-                "Gemini API key required. Set GEMINI_API_KEY environment "
-                "variable or pass gemini_api_key parameter."
+                "Featherless API key required. Set FEATHERLESS_API_KEY env var."
             )
-        
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model_name)
     
     def audit(
         self,
@@ -228,17 +215,40 @@ Return ONLY the JSON array, no other text.
 """
         
         try:
-            response = self.model.generate_content(prompt)
-            findings_json = response.text.strip()
-            
+            # Pivoted from Gemini to Featherless (Google project blocked)
+            endpoint = "https://api.featherless.ai/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": "Qwen/Qwen2.5-7B-Instruct",
+                "messages": [
+                    {"role": "system", "content": "You are a clinical dictation auditor. Parse the radiologist's dictation into structured findings with assertion state (present/absent) for each finding. Return JSON only."},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.0,
+                "max_tokens": 512,
+            }
+
+            with httpx.Client(timeout=30.0) as client:
+                response = client.post(endpoint, headers=headers, json=payload, timeout=30.0)
+                response.raise_for_status()
+                result = response.json()
+
+            try:
+                findings_json = result["choices"][0]["message"]["content"]
+            except Exception:
+                findings_json = json.dumps(result)
+
             # Remove markdown code blocks if present
             if findings_json.startswith("```"):
                 findings_json = findings_json.split("```")[1]
                 if findings_json.startswith("json"):
                     findings_json = findings_json[4:]
-            
+
             findings_data = json.loads(findings_json)
-            
+
             return [
                 DictatedFinding(
                     finding_name=f["finding_name"],
@@ -248,7 +258,7 @@ Return ONLY the JSON array, no other text.
                 )
                 for f in findings_data
             ]
-        
+
         except Exception as e:
             # Fallback: return empty list if parsing fails
             print(f"Warning: Failed to parse dictation: {e}")

@@ -180,7 +180,7 @@ If MURA access is delayed >48 hours:
 - [ ] Master demo script (`scripts/run_full_demo.py`) - 1 hour
 - [ ] Demo script documentation (`docs/DEMO_SCRIPT.md`) - 1 hour
 - [ ] README v2 rewrite with four-pillar pitch - 1 hour
-- [ ] Remove quantum mentions (MODEL_CARD.md line 9, README.old.md line 407) - 15 min
+- [ ] Remove forbidden mentions from MODEL_CARD.md and README.old.md - 15 min
 - [ ] Submission form content - 30 min
 
 **Estimated Time:** 4.75 hours
@@ -253,7 +253,7 @@ If MURA access is delayed >48 hours:
 
 6. **Documentation** (2 hours)
    - README v2 rewrite
-   - Remove quantum mentions
+   - Remove forbidden mentions
    - Submission form content
 
 ### Phase 3: Testing & Polish (3 hours)
@@ -303,8 +303,8 @@ If MURA access is delayed >48 hours:
 - [x] Tracks A, B, C implemented
 - [ ] Tracks D, F, E implemented
 - [ ] All tests passing
-- [ ] No quantum mentions
-- [ ] No "Sultan" references
+- [ ] No forbidden mentions
+- [ ] No "Rayane Aggoune" references
 - [ ] Author: Rayane Aggoune everywhere
 
 ### Documentation
@@ -377,7 +377,7 @@ If MURA access is delayed >48 hours:
 
 **Author:** Rayane Aggoune  
 **Location:** Sétif, Algeria  
-**Affiliation:** PhD in Quantum AI (solo researcher)  
+**Affiliation:** PhD in AI (solo researcher)  
 **Repository:** github.com/Anna-ray/radagent  
 **License:** MIT  
 **Event:** Milan AI Week 2026 - AI Agent Olympics  

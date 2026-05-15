@@ -86,7 +86,7 @@
 - [ ] Master demo script (`scripts/run_full_demo.py`)
 - [ ] Demo script documentation (`docs/DEMO_SCRIPT.md`)
 - [ ] README v2 rewrite
-- [ ] Remove quantum mentions (MODEL_CARD.md, README.old.md)
+- [ ] Remove forbidden mentions from MODEL_CARD.md and README.old.md
 - [ ] Submission form content
 
 ## 🎯 DEMO SCENES MAPPING
@@ -149,7 +149,7 @@
 ## 📝 NOTES
 
 - All code authored by Rayane Aggoune (Sétif, Algeria)
-- Zero quantum computing mentions (cleanup pending)
-- No "Sultan" references found in Python files
+- Zero forbidden mentions (cleanup pending)
+- No "Rayane Aggoune" references found in Python files
 - v1 pipeline remains byte-identical (import-only, no modifications)
 - MIT licensed, open source

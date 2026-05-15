@@ -18,13 +18,13 @@ bone_xray:
   dicom_modalities: [CR, DX]
   body_part_filters: [SHOULDER, ELBOW, WRIST, HAND, FINGER, HUMERUS, FOREARM, FOOT, ANKLE, KNEE, HIP]
   specialist_model: convnextv2_tiny.fcmae_ft_in22k_in1k
-  specialist_weights: weights/specialist_mura_v1.pt
+  specialist_weights: null
   num_classes: 7
   rag_corpus: corpus/msk_guidelines
   preprocessing: bone_xray_normalize
-  status: production
+  status: registered
   autonomy_tools: [triage_study, route_to_subspecialist]
-  description: "Bone X-ray specialist - MURA trained, 7 body parts"
+  description: "Bone X-ray specialist - MURA placeholder, specialist training scheduled v2.1"
 
 chest_ct:
   dicom_modalities: [CT]
